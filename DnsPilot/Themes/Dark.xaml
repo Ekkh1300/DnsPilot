@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+      Dark theme. Same keys as Light.xaml, different values - the two files are swapped as a
+      unit and nothing else in the app knows which one is loaded.
+
+      The ground is a blue-black (#101218) rather than pure black: at #000000 the hairlines and
+      surfaces have nowhere to go underneath, and every row edge either disappears or has to be
+      drawn far too bright to survive. The accent is lifted to #7B85F0 because #4F5BD5, which is
+      legible on paper, falls below contrast against a dark ground.
+    -->
+
+    <Color x:Key="Color.Paper">#101218</Color>
+    <Color x:Key="Color.Surface">#181B23</Color>
+    <Color x:Key="Color.Line">#282C37</Color>
+    <Color x:Key="Color.Line.Strong">#3A3F4D</Color>
+    <Color x:Key="Color.Ink">#E8EAF0</Color>
+    <Color x:Key="Color.Muted">#9AA1B2</Color>
+    <Color x:Key="Color.Accent">#7B85F0</Color>
+    <Color x:Key="Color.Accent.Text">#FFFFFF</Color>
+    <Color x:Key="Color.Accent.Soft">#232740</Color>
+    <Color x:Key="Color.Accent.Hover">#8B94F5</Color>
+    <Color x:Key="Color.Good">#35C88A</Color>
+    <Color x:Key="Color.Slow">#E8A33D</Color>
+    <Color x:Key="Color.Error">#F0727C</Color>
+    <Color x:Key="Color.Hover">#1E222B</Color>
+    <Color x:Key="Color.Press">#232833</Color>
+    <Color x:Key="Color.Input">#1C2029</Color>
+
+    <SolidColorBrush x:Key="Brush.Paper"       Color="{StaticResource Color.Paper}" />
+    <SolidColorBrush x:Key="Brush.Surface"     Color="{StaticResource Color.Surface}" />
+    <SolidColorBrush x:Key="Brush.Line"        Color="{StaticResource Color.Line}" />
+    <SolidColorBrush x:Key="Brush.Line.Strong" Color="{StaticResource Color.Line.Strong}" />
+    <SolidColorBrush x:Key="Brush.Ink"         Color="{StaticResource Color.Ink}" />
+    <SolidColorBrush x:Key="Brush.Muted"       Color="{StaticResource Color.Muted}" />
+    <SolidColorBrush x:Key="Brush.Accent"      Color="{StaticResource Color.Accent}" />
+    <SolidColorBrush x:Key="Brush.Accent.Text" Color="{StaticResource Color.Accent.Text}" />
+    <SolidColorBrush x:Key="Brush.Accent.Soft" Color="{StaticResource Color.Accent.Soft}" />
+    <SolidColorBrush x:Key="Brush.Accent.Hover" Color="{StaticResource Color.Accent.Hover}" />
+    <SolidColorBrush x:Key="Brush.Good"        Color="{StaticResource Color.Good}" />
+    <SolidColorBrush x:Key="Brush.Slow"        Color="{StaticResource Color.Slow}" />
+    <SolidColorBrush x:Key="Brush.Error"       Color="{StaticResource Color.Error}" />
+    <SolidColorBrush x:Key="Brush.Hover"       Color="{StaticResource Color.Hover}" />
+    <SolidColorBrush x:Key="Brush.Press"       Color="{StaticResource Color.Press}" />
+    <SolidColorBrush x:Key="Brush.Input"       Color="{StaticResource Color.Input}" />
+    <SolidColorBrush x:Key="Brush.Window"      Color="{StaticResource Color.Paper}" />
+
+</ResourceDictionary>

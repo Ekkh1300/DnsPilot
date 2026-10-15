@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    DnsPilot - a small DNS switcher for Windows.
+
+    Deliberately narrow: it changes which resolver the machine asks, shows which answer fastest,
+    and puts the original back. Nothing else. It is not a tunnel and does not move any other
+    traffic.
+
+    WPF on net8.0-windows because that is what this machine can build, run and test, so every
+    claim about it can be checked rather than assumed. UseWindowsForms is on for one reason only:
+    the tray icon. NotifyIcon is the supported way to have one and WPF has no equivalent.
+
+    Elevated, because changing DNS is a privileged operation - netsh and the Tcpip registry key
+    both refuse without it. That means one UAC prompt at start rather than a second one at the
+    moment of the first change, which is the better of the two surprises.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>DnsPilot</RootNamespace>
+    <AssemblyName>DnsPilot</AssemblyName>
+    <Version>1.0.0</Version>
+    <LangVersion>latest</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyTitle>DnsPilot</AssemblyTitle>
+    <Product>DnsPilot</Product>
+    <Description>Switch DNS servers on a network adapter</Description>
+
+    <!--
+      WFAC010 asks for the high-DPI declaration to move out of app.manifest and into
+      ApplicationHighDpiMode. That advice is correct for a WinForms app and wrong here: this is a
+      WPF window, WPF reads DPI awareness from the manifest, and ApplicationHighDpiMode configures
+      WinForms only - which in this project is a tray icon with no rendered surface of its own.
+      Following the suggestion would leave the window scaling by whatever the OS decides when a
+      manifest says nothing, which on a scaled display means blur. The manifest stays.
+    -->
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
+  </PropertyGroup>
+
+  <!-- Presets are data, not code, so they ship as one file the app reads at start. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Data\presets.json" />
+  </ItemGroup>
+
+  <!--
+    The installer lives beside the app because it installs the app, but it is a different program
+    with a different target: Setup.cs is C# 5, compiled by the Windows-bundled csc against
+    .NET Framework, and none of it belongs in a net8.0-windows build. SDK projects glob every .cs
+    under the project folder, so leaving it in would compile WinForms installer code into the app
+    and drag its twenty-odd nullability warnings into this project's warning count. It is built by
+    installer\build.ps1 instead.
+  -->
+  <ItemGroup>
+    <Compile Remove="installer\**\*.cs" />
+    <None Include="installer\**" />
+  </ItemGroup>
+
+</Project>

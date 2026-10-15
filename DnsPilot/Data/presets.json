@@ -1,0 +1,487 @@
+{
+  "_source": "Converted from DNS Jumper 2.3 (www.sordum.org) DnsJumper.ini. That list is extensive but unmaintained, and fifteen of its addresses no longer answer; they are removed here, with each one and the reason recorded in tools/Import-DnsJumper.ps1. The IPv6 entries were never verified, because the machine the sweep ran on had no IPv6 connectivity at all, so every one of them failed regardless of whether it is live - they are unverified rather than known-good, and the in-app test is what settles them. Everything else is listed as published.",
+  "groups": [
+    {
+      "id": "ipv4-default",
+      "family": "IPv4",
+      "group": "default",
+      "servers": [
+        {
+          "name": "Zen Internet",
+          "country": "GB",
+          "primary": "212.23.8.1",
+          "secondary": "212.23.3.1"
+        }
+        ,
+        {
+          "name": "UltraDNS",
+          "country": "US",
+          "primary": "204.69.234.1",
+          "secondary": "204.74.101.1"
+        }
+        ,
+        {
+          "name": "Hurricane Electric",
+          "country": "US",
+          "primary": "74.82.42.42",
+          "secondary": ""
+        }
+        ,
+        {
+          "name": "Orange DNS",
+          "country": "GB",
+          "primary": "195.92.195.94",
+          "secondary": "195.92.195.95"
+        }
+        ,
+        {
+          "name": "Safe DNS",
+          "country": "RU",
+          "primary": "195.46.39.39",
+          "secondary": "195.46.39.40"
+        }
+        ,
+        {
+          "name": "DNS WATCH",
+          "country": "DE",
+          "primary": "84.200.69.80",
+          "secondary": "84.200.70.40"
+        }
+        ,
+        {
+          "name": "Quad9 Security",
+          "country": "US",
+          "primary": "9.9.9.9",
+          "secondary": "149.112.112.112"
+        }
+        ,
+        {
+          "name": "AdGuard",
+          "country": "RU",
+          "primary": "94.140.14.14",
+          "secondary": "94.140.15.15"
+        }
+        ,
+        {
+          "name": "Quad9 No Security",
+          "country": "US",
+          "primary": "9.9.9.10",
+          "secondary": "149.112.112.10"
+        }
+        ,
+        {
+          "name": "Freenom World",
+          "country": "NL",
+          "primary": "80.80.80.80",
+          "secondary": "80.80.81.81"
+        }
+        ,
+        {
+          "name": "Neustar 2",
+          "country": "US",
+          "primary": "156.154.70.5",
+          "secondary": "156.154.71.5"
+        }
+        ,
+        {
+          "name": "Neustar 1",
+          "country": "US",
+          "primary": "156.154.70.1",
+          "secondary": "156.154.71.1"
+        }
+        ,
+        {
+          "name": "Cloudflare",
+          "country": "AU",
+          "primary": "1.1.1.1",
+          "secondary": "1.0.0.1"
+        }
+        ,
+        {
+          "name": "Level 3 - B",
+          "country": "US",
+          "primary": "4.2.2.1",
+          "secondary": "4.2.2.2"
+        }
+        ,
+        {
+          "name": "Level 3 - A",
+          "country": "US",
+          "primary": "209.244.0.3",
+          "secondary": "209.244.0.4"
+        }
+        ,
+        {
+          "name": "OpenDNS",
+          "country": "US",
+          "primary": "208.67.222.222",
+          "secondary": "208.67.220.220"
+        }
+        ,
+        {
+          "name": "Google Public DNS",
+          "country": "US",
+          "primary": "8.8.8.8",
+          "secondary": "8.8.4.4"
+        }
+        ,
+        {
+          "name": "Yandex",
+          "country": "RU",
+          "primary": "77.88.8.1",
+          "secondary": "77.88.8.8"
+        }
+        ,
+        {
+          "name": "OpenDNS - 2",
+          "country": "US",
+          "primary": "208.67.222.220",
+          "secondary": "208.67.220.222"
+        }
+        ,
+        {
+          "name": "Comodo",
+          "country": "US",
+          "primary": "156.154.70.22",
+          "secondary": "156.154.71.22"
+        }
+        ,
+        {
+          "name": "Qwest",
+          "country": "US",
+          "primary": "205.171.3.65",
+          "secondary": "205.171.2.65"
+        }
+        ,
+        {
+          "name": "VeriSign Public DNS",
+          "country": "US",
+          "primary": "64.6.64.6",
+          "secondary": "64.6.65.6"
+        }
+        ,
+        {
+          "name": "Level 3 - D",
+          "country": "US",
+          "primary": "4.2.2.5",
+          "secondary": "4.2.2.6"
+        }
+        ,
+        {
+          "name": "Level 3 - C",
+          "country": "US",
+          "primary": "4.2.2.3",
+          "secondary": "4.2.2.4"
+        }
+        ,
+        {
+          "name": "Dyn",
+          "country": "US",
+          "primary": "216.146.35.35",
+          "secondary": "216.146.36.36"
+        }
+        ,
+        {
+          "name": "Comodo Secure",
+          "country": "US",
+          "primary": "8.26.56.26",
+          "secondary": "8.20.247.20"
+        }
+      ]
+    }
+    ,
+    {
+      "id": "ipv4-family",
+      "family": "IPv4",
+      "group": "family",
+      "servers": [
+        {
+          "name": "Neustar Family Secure",
+          "country": "US",
+          "primary": "156.154.70.3",
+          "secondary": "156.154.71.3"
+        }
+        ,
+        {
+          "name": "CleanBrowsing Adult Filter",
+          "country": "IE",
+          "primary": "185.228.168.10",
+          "secondary": "185.228.169.11"
+        }
+        ,
+        {
+          "name": "AdGuard Family",
+          "country": "RU",
+          "primary": "94.140.14.15",
+          "secondary": "94.140.15.16"
+        }
+        ,
+        {
+          "name": "Neustar Business Secure",
+          "country": "US",
+          "primary": "156.154.70.4",
+          "secondary": "156.154.71.4"
+        }
+        ,
+        {
+          "name": "CleanBrowsing Family",
+          "country": "IE",
+          "primary": "185.228.168.168",
+          "secondary": "185.228.169.168"
+        }
+        ,
+        {
+          "name": "OpenDNS Family",
+          "country": "US",
+          "primary": "208.67.222.123",
+          "secondary": "208.67.220.123"
+        }
+        ,
+        {
+          "name": "Cloudflare Malware + Adult Blocking",
+          "country": "AU",
+          "primary": "1.1.1.3",
+          "secondary": "1.0.0.3"
+        }
+        ,
+        {
+          "name": "Yandex Family",
+          "country": "RU",
+          "primary": "77.88.8.7",
+          "secondary": "77.88.8.3"
+        }
+      ]
+    }
+    ,
+    {
+      "id": "ipv4-secure",
+      "family": "IPv4",
+      "group": "secure",
+      "servers": [
+        {
+          "name": "Comodo Secure",
+          "country": "US",
+          "primary": "8.26.56.26",
+          "secondary": "8.20.247.20"
+        }
+        ,
+        {
+          "name": "CleanBrowsing Secure",
+          "country": "IE",
+          "primary": "185.228.168.9",
+          "secondary": "185.228.169.9"
+        }
+        ,
+        {
+          "name": "NeustarThreat Protection",
+          "country": "US",
+          "primary": "156.154.70.2",
+          "secondary": "156.154.71.2"
+        }
+        ,
+        {
+          "name": "Yandex Safe",
+          "country": "RU",
+          "primary": "77.88.8.88",
+          "secondary": "77.88.8.2"
+        }
+        ,
+        {
+          "name": "Cloudflare Malware Blocking",
+          "country": "AU",
+          "primary": "1.1.1.2",
+          "secondary": "1.0.0.2"
+        }
+      ]
+    }
+    ,
+    {
+      "id": "ipv6-default",
+      "family": "IPv6",
+      "group": "default",
+      "servers": [
+        {
+          "name": "Neustar 2",
+          "country": "US",
+          "primary": "2610:a1:1018::5",
+          "secondary": "2610:a1:1019::5"
+        }
+        ,
+        {
+          "name": "Neustar 1",
+          "country": "US",
+          "primary": "2610:a1:1018::1",
+          "secondary": "2610:a1:1019::1"
+        }
+        ,
+        {
+          "name": "FDN",
+          "country": "US",
+          "primary": "2001:910:800::12",
+          "secondary": "2001:910:800::40"
+        }
+        ,
+        {
+          "name": "Quad9 No Security",
+          "country": "US",
+          "primary": "2620:fe::10",
+          "secondary": "2620:fe::fe:10"
+        }
+        ,
+        {
+          "name": "Quad9 Security",
+          "country": "US",
+          "primary": "2620:fe::fe",
+          "secondary": "2620:fe::9"
+        }
+        ,
+        {
+          "name": "AdGuard",
+          "country": "RU",
+          "primary": "2a10:50c0::ad1:ff",
+          "secondary": "2a10:50c0::ad2:ff"
+        }
+        ,
+        {
+          "name": "DNS WATCH",
+          "country": "US",
+          "primary": "2001:1608:10:25::1c04:b12f",
+          "secondary": "2001:1608:10:25::9249:d69b"
+        }
+        ,
+        {
+          "name": "Yandex DNS",
+          "country": "RU",
+          "primary": "2a02:6b8::feed:0ff",
+          "secondary": "2a02:6b8:0:1::feed:0ff"
+        }
+        ,
+        {
+          "name": "OpenDNS Sandbox",
+          "country": "US",
+          "primary": "2620:0:ccc::2",
+          "secondary": "2620:0:ccd::2"
+        }
+        ,
+        {
+          "name": "Google Public DNS",
+          "country": "US",
+          "primary": "2001:4860:4860::8888",
+          "secondary": "2001:4860:4860::8844"
+        }
+        ,
+        {
+          "name": "Cesidian Root",
+          "country": "US",
+          "primary": "2001:470:6c:521::2",
+          "secondary": "2001:470:6d:521::1"
+        }
+        ,
+        {
+          "name": "Censurfridns",
+          "country": "DK",
+          "primary": "2001:67c:28a4::",
+          "secondary": "2a01:3a0:53:53::"
+        }
+        ,
+        {
+          "name": "Cloudflare",
+          "country": "AU",
+          "primary": "2606:4700:4700::1111",
+          "secondary": "2606:4700:4700::1001"
+        }
+      ]
+    }
+    ,
+    {
+      "id": "ipv6-family",
+      "family": "IPv6",
+      "group": "family",
+      "servers": [
+        {
+          "name": "Neustar Family Secure",
+          "country": "US",
+          "primary": "2610:a1:1018::3",
+          "secondary": "2610:a1:1019::3"
+        }
+        ,
+        {
+          "name": "Neustar Business Secure",
+          "country": "US",
+          "primary": "2610:a1:1018::4",
+          "secondary": "2610:a1:1019::4"
+        }
+        ,
+        {
+          "name": "AdGuard Family",
+          "country": "RU",
+          "primary": "2a10:50c0::bad1:ff",
+          "secondary": "2a10:50c0::bad2:ff"
+        }
+        ,
+        {
+          "name": "CleanBrowsing Adult Filter",
+          "country": "IE",
+          "primary": "2a0d:2a00:1::1",
+          "secondary": "2a0d:2a00:2::1"
+        }
+        ,
+        {
+          "name": "Yandex Family",
+          "country": "RU",
+          "primary": "2a02:6b8::feed:a11",
+          "secondary": "2a02:6b8:0:1::feed:a11"
+        }
+        ,
+        {
+          "name": "Cloudflare Malware + Adult Blocking",
+          "country": "AU",
+          "primary": "2606:4700:4700::1113",
+          "secondary": "2606:4700:4700::1003"
+        }
+        ,
+        {
+          "name": "CleanBrowsing Family",
+          "country": "IE",
+          "primary": "2a0d:2a00:1::",
+          "secondary": "2a0d:2a00:2::"
+        }
+      ]
+    }
+    ,
+    {
+      "id": "ipv6-secure",
+      "family": "IPv6",
+      "group": "secure",
+      "servers": [
+        {
+          "name": "CleanBrowsing Secure",
+          "country": "IE",
+          "primary": "2a0d:2a00:1::2",
+          "secondary": "2a0d:2a00:2::2"
+        }
+        ,
+        {
+          "name": "NeustarThreat Protection",
+          "country": "US",
+          "primary": "2610:a1:1018::2",
+          "secondary": "2610:a1:1019::2"
+        }
+        ,
+        {
+          "name": "Yandex Safe",
+          "country": "RU",
+          "primary": "2a02:6b8::feed:bad",
+          "secondary": "2a02:6b8:0:1::feed:bad"
+        }
+        ,
+        {
+          "name": "Cloudflare Malware Blocking",
+          "country": "AU",
+          "primary": "2606:4700:4700::1112",
+          "secondary": "2606:4700:4700::1002"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1412 @@
+﻿[
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Zen Internet",
+        "country":  "GB",
+        "role":  "primary",
+        "address":  "212.23.8.1",
+        "ms":  103,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Zen Internet",
+        "country":  "GB",
+        "role":  "secondary",
+        "address":  "212.23.3.1",
+        "ms":  107,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "UltraDNS",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "204.69.234.1",
+        "ms":  94,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "UltraDNS",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "204.74.101.1",
+        "ms":  98,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Hurricane Electric",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "74.82.42.42",
+        "ms":  510,
+        "state":  "slow"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Orange DNS",
+        "country":  "GB",
+        "role":  "primary",
+        "address":  "195.92.195.94",
+        "ms":  81,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Orange DNS",
+        "country":  "GB",
+        "role":  "secondary",
+        "address":  "195.92.195.95",
+        "ms":  84,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Safe DNS",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "195.46.39.39",
+        "ms":  99,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Safe DNS",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "195.46.39.40",
+        "ms":  91,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Sprint",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "204.97.212.10",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Sprint",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "204.117.214.10",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Sprintlink",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "199.2.252.10",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Sprintlink",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "204.97.212.10",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "DNS WATCH",
+        "country":  "DE",
+        "role":  "primary",
+        "address":  "84.200.69.80",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "DNS WATCH",
+        "country":  "DE",
+        "role":  "secondary",
+        "address":  "84.200.70.40",
+        "ms":  94,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Quad9 Security",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "9.9.9.9",
+        "ms":  83,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Quad9 Security",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "149.112.112.112",
+        "ms":  44,
+        "state":  "fast"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "AdGuard",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "94.140.14.14",
+        "ms":  44,
+        "state":  "fast"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "AdGuard",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "94.140.15.15",
+        "ms":  44,
+        "state":  "fast"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Censurfridns",
+        "country":  "DK",
+        "role":  "primary",
+        "address":  "89.233.43.71",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Censurfridns",
+        "country":  "DK",
+        "role":  "secondary",
+        "address":  "91.239.100.100",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Quad9 No Security",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "9.9.9.10",
+        "ms":  83,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Quad9 No Security",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "149.112.112.10",
+        "ms":  45,
+        "state":  "fast"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "FDN",
+        "country":  "FR",
+        "role":  "primary",
+        "address":  "80.67.169.12",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "FDN",
+        "country":  "FR",
+        "role":  "secondary",
+        "address":  "80.67.169.40",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Freenom World",
+        "country":  "NL",
+        "role":  "primary",
+        "address":  "80.80.80.80",
+        "ms":  179,
+        "state":  "slow"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Freenom World",
+        "country":  "NL",
+        "role":  "secondary",
+        "address":  "80.80.81.81",
+        "ms":  317,
+        "state":  "slow"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Neustar 2",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "156.154.70.5",
+        "ms":  100,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Neustar 2",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "156.154.71.5",
+        "ms":  94,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Neustar 1",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "156.154.70.1",
+        "ms":  99,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Neustar 1",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "156.154.71.1",
+        "ms":  92,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Norton ConnectSafe Basic",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "199.85.126.10",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Norton ConnectSafe Basic",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "199.85.127.10",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Cloudflare",
+        "country":  "AU",
+        "role":  "primary",
+        "address":  "1.1.1.1",
+        "ms":  85,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Cloudflare",
+        "country":  "AU",
+        "role":  "secondary",
+        "address":  "1.0.0.1",
+        "ms":  85,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Level 3 - B",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "4.2.2.1",
+        "ms":  89,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Level 3 - B",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "4.2.2.2",
+        "ms":  89,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Level 3 - A",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "209.244.0.3",
+        "ms":  90,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Level 3 - A",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "209.244.0.4",
+        "ms":  92,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "OpenDNS",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "208.67.222.222",
+        "ms":  74,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "OpenDNS",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "208.67.220.220",
+        "ms":  85,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Google Public DNS",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "8.8.8.8",
+        "ms":  105,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Google Public DNS",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "8.8.4.4",
+        "ms":  82,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Yandex",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "77.88.8.1",
+        "ms":  85,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Yandex",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "77.88.8.8",
+        "ms":  87,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "OpenDNS - 2",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "208.67.222.220",
+        "ms":  85,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "OpenDNS - 2",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "208.67.220.222",
+        "ms":  83,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Comodo",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "156.154.70.22",
+        "ms":  103,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Comodo",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "156.154.71.22",
+        "ms":  90,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Norton DNS",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "198.153.192.1",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Norton DNS",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "198.153.194.1",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Qwest",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "205.171.3.65",
+        "ms":  176,
+        "state":  "slow"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Qwest",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "205.171.2.65",
+        "ms":  175,
+        "state":  "slow"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "VeriSign Public DNS",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "64.6.64.6",
+        "ms":  98,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "VeriSign Public DNS",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "64.6.65.6",
+        "ms":  91,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Level 3 - D",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "4.2.2.5",
+        "ms":  89,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Level 3 - D",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "4.2.2.6",
+        "ms":  89,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Level 3 - C",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "4.2.2.3",
+        "ms":  413,
+        "state":  "slow"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Level 3 - C",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "4.2.2.4",
+        "ms":  417,
+        "state":  "slow"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Dyn",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "216.146.35.35",
+        "ms":  10,
+        "state":  "fast"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Dyn",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "216.146.36.36",
+        "ms":  7,
+        "state":  "fast"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Comodo Secure",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "8.26.56.26",
+        "ms":  78,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv4",
+        "name":  "Comodo Secure",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "8.20.247.20",
+        "ms":  84,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Neustar Family Secure",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "156.154.70.3",
+        "ms":  98,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Neustar Family Secure",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "156.154.71.3",
+        "ms":  89,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "CleanBrowsing Adult Filter",
+        "country":  "IE",
+        "role":  "primary",
+        "address":  "185.228.168.10",
+        "ms":  76,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "CleanBrowsing Adult Filter",
+        "country":  "IE",
+        "role":  "secondary",
+        "address":  "185.228.169.11",
+        "ms":  100,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "AdGuard Family",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "94.140.14.15",
+        "ms":  44,
+        "state":  "fast"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "AdGuard Family",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "94.140.15.16",
+        "ms":  45,
+        "state":  "fast"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Neustar Business Secure",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "156.154.70.4",
+        "ms":  105,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Neustar Business Secure",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "156.154.71.4",
+        "ms":  92,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "CleanBrowsing Family",
+        "country":  "IE",
+        "role":  "primary",
+        "address":  "185.228.168.168",
+        "ms":  83,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "CleanBrowsing Family",
+        "country":  "IE",
+        "role":  "secondary",
+        "address":  "185.228.169.168",
+        "ms":  101,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Norton ConnectSafe Family",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "199.85.126.30",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Norton ConnectSafe Family",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "199.85.127.30",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "OpenDNS Family",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "208.67.222.123",
+        "ms":  96,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "OpenDNS Family",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "208.67.220.123",
+        "ms":  85,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Cloudflare Malware + Adult Blocking",
+        "country":  "AU",
+        "role":  "primary",
+        "address":  "1.1.1.3",
+        "ms":  89,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Cloudflare Malware + Adult Blocking",
+        "country":  "AU",
+        "role":  "secondary",
+        "address":  "1.0.0.3",
+        "ms":  95,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Yandex Family",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "77.88.8.7",
+        "ms":  90,
+        "state":  "ok"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv4",
+        "name":  "Yandex Family",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "77.88.8.3",
+        "ms":  90,
+        "state":  "ok"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "Comodo Secure",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "8.26.56.26",
+        "ms":  78,
+        "state":  "ok"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "Comodo Secure",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "8.20.247.20",
+        "ms":  84,
+        "state":  "ok"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "CleanBrowsing Secure",
+        "country":  "IE",
+        "role":  "primary",
+        "address":  "185.228.168.9",
+        "ms":  83,
+        "state":  "ok"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "CleanBrowsing Secure",
+        "country":  "IE",
+        "role":  "secondary",
+        "address":  "185.228.169.9",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "NeustarThreat Protection",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "156.154.70.2",
+        "ms":  99,
+        "state":  "ok"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "NeustarThreat Protection",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "156.154.71.2",
+        "ms":  91,
+        "state":  "ok"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "Norton ConnectSafe Secure",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "199.85.126.20",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "Norton ConnectSafe Secure",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "199.85.127.20",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "Yandex Safe",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "77.88.8.88",
+        "ms":  91,
+        "state":  "ok"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "Yandex Safe",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "77.88.8.2",
+        "ms":  92,
+        "state":  "ok"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "Cloudflare Malware Blocking",
+        "country":  "AU",
+        "role":  "primary",
+        "address":  "1.1.1.2",
+        "ms":  89,
+        "state":  "ok"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv4",
+        "name":  "Cloudflare Malware Blocking",
+        "country":  "AU",
+        "role":  "secondary",
+        "address":  "1.0.0.2",
+        "ms":  87,
+        "state":  "ok"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Neustar 2",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2610:a1:1018::5",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Neustar 2",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2610:a1:1019::5",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Neustar 1",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2610:a1:1018::1",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Neustar 1",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2610:a1:1019::1",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "FDN",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2001:910:800::12",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "FDN",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2001:910:800::40",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Quad9 No Security",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2620:fe::10",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Quad9 No Security",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2620:fe::fe:10",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Quad9 Security",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2620:fe::fe",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Quad9 Security",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2620:fe::9",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "AdGuard",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "2a10:50c0::ad1:ff",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "AdGuard",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "2a10:50c0::ad2:ff",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "DNS WATCH",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2001:1608:10:25::1c04:b12f",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "DNS WATCH",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2001:1608:10:25::9249:d69b",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Yandex DNS",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "2a02:6b8::feed:0ff",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Yandex DNS",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "2a02:6b8:0:1::feed:0ff",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "OpenDNS Sandbox",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2620:0:ccc::2",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "OpenDNS Sandbox",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2620:0:ccd::2",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Google Public DNS",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2001:4860:4860::8888",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Google Public DNS",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2001:4860:4860::8844",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Cesidian Root",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2001:470:6c:521::2",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Cesidian Root",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2001:470:6d:521::1",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Censurfridns",
+        "country":  "DK",
+        "role":  "primary",
+        "address":  "2001:67c:28a4::",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Censurfridns",
+        "country":  "DK",
+        "role":  "secondary",
+        "address":  "2a01:3a0:53:53::",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Cloudflare",
+        "country":  "AU",
+        "role":  "primary",
+        "address":  "2606:4700:4700::1111",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "default",
+        "family":  "IPv6",
+        "name":  "Cloudflare",
+        "country":  "AU",
+        "role":  "secondary",
+        "address":  "2606:4700:4700::1001",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "Neustar Family Secure",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2610:a1:1018::3",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "Neustar Family Secure",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2610:a1:1019::3",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "Neustar Business Secure",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2610:a1:1018::4",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "Neustar Business Secure",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2610:a1:1019::4",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "AdGuard Family",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "2a10:50c0::bad1:ff",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "AdGuard Family",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "2a10:50c0::bad2:ff",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "CleanBrowsing Adult Filter",
+        "country":  "IE",
+        "role":  "primary",
+        "address":  "2a0d:2a00:1::1",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "CleanBrowsing Adult Filter",
+        "country":  "IE",
+        "role":  "secondary",
+        "address":  "2a0d:2a00:2::1",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "Yandex Family",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "2a02:6b8::feed:a11",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "Yandex Family",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "2a02:6b8:0:1::feed:a11",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "Cloudflare Malware + Adult Blocking",
+        "country":  "AU",
+        "role":  "primary",
+        "address":  "2606:4700:4700::1113",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "Cloudflare Malware + Adult Blocking",
+        "country":  "AU",
+        "role":  "secondary",
+        "address":  "2606:4700:4700::1003",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "CleanBrowsing Family",
+        "country":  "IE",
+        "role":  "primary",
+        "address":  "2a0d:2a00:1::",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "family",
+        "family":  "IPv6",
+        "name":  "CleanBrowsing Family",
+        "country":  "IE",
+        "role":  "secondary",
+        "address":  "2a0d:2a00:2::",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv6",
+        "name":  "CleanBrowsing Secure",
+        "country":  "IE",
+        "role":  "primary",
+        "address":  "2a0d:2a00:1::2",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv6",
+        "name":  "CleanBrowsing Secure",
+        "country":  "IE",
+        "role":  "secondary",
+        "address":  "2a0d:2a00:2::2",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv6",
+        "name":  "NeustarThreat Protection",
+        "country":  "US",
+        "role":  "primary",
+        "address":  "2610:a1:1018::2",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv6",
+        "name":  "NeustarThreat Protection",
+        "country":  "US",
+        "role":  "secondary",
+        "address":  "2610:a1:1019::2",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv6",
+        "name":  "Yandex Safe",
+        "country":  "RU",
+        "role":  "primary",
+        "address":  "2a02:6b8::feed:bad",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv6",
+        "name":  "Yandex Safe",
+        "country":  "RU",
+        "role":  "secondary",
+        "address":  "2a02:6b8:0:1::feed:bad",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv6",
+        "name":  "Cloudflare Malware Blocking",
+        "country":  "AU",
+        "role":  "primary",
+        "address":  "2606:4700:4700::1112",
+        "ms":  null,
+        "state":  "dead"
+    },
+    {
+        "group":  "secure",
+        "family":  "IPv6",
+        "name":  "Cloudflare Malware Blocking",
+        "country":  "AU",
+        "role":  "secondary",
+        "address":  "2606:4700:4700::1002",
+        "ms":  null,
+        "state":  "dead"
+    }
+]

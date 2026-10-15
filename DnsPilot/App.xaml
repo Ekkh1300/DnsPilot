@@ -1,0 +1,312 @@
+<Application x:Class="DnsPilot.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+             ShutdownMode="OnMainWindowClose"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/Light.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!--
+              Typography.
+
+              Segoe UI Variable ships with Windows 11 and is what the system itself uses, so the
+              window sits alongside the OS rather than beside it; the list falls back to Segoe UI
+              on Windows 10. Cascadia Mono is reserved for IP addresses, where a fixed pitch is
+              not decoration but the only way two addresses of different length can be compared
+              digit by digit - which is exactly what the user is doing when choosing between
+              1.1.1.1 and 8.8.8.8.
+            -->
+            <FontFamily x:Key="Font.UI">Segoe UI Variable Text, Segoe UI, Segoe UI Arabic</FontFamily>
+            <FontFamily x:Key="Font.Display">Segoe UI Variable Display, Segoe UI, Segoe UI Arabic</FontFamily>
+            <FontFamily x:Key="Font.Mono">Cascadia Mono, Consolas, Courier New</FontFamily>
+
+            <!-- Sizes are real Double values rather than strings, because a TextBlock FontSize
+                 will not accept a string and a typo in one would only surface when that style is
+                 first applied to a live element. -->
+            <sys:Double x:Key="Size.Title">17</sys:Double>
+            <sys:Double x:Key="Size.Section">11.5</sys:Double>
+            <sys:Double x:Key="Size.Body">13</sys:Double>
+            <sys:Double x:Key="Size.Small">11.5</sys:Double>
+            <sys:Double x:Key="Size.Latency">13</sys:Double>
+
+            <!-- Letter-spaced, upper-case label for section heads. Tracked capitals are the one
+                 typographic device that makes a compact panel read as designed rather than
+                 assembled, and they need the space to work. -->
+            <Style x:Key="Label.Section" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource Font.UI}" />
+                <Setter Property="FontSize" Value="{StaticResource Size.Section}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Muted}" />
+                <Setter Property="Margin" Value="0,0,0,7" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            </Style>
+
+            <Style x:Key="Text.Default" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource Font.UI}" />
+                <Setter Property="FontSize" Value="{StaticResource Size.Body}" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Ink}" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+
+            <Style x:Key="Text.Muted" TargetType="TextBlock" BasedOn="{StaticResource Text.Default}">
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Muted}" />
+                <Setter Property="FontSize" Value="{StaticResource Size.Small}" />
+            </Style>
+
+            <!-- Addresses are always Latin digits and dots regardless of the UI language, so this
+                 style pins LeftToRight. Without it, in the Persian window the whole run reverses
+                 and 212.23.8.1 is displayed as 1.8.3.212 - a different, wrong address. -->
+            <Style x:Key="Text.Address" TargetType="TextBlock">
+                <Setter Property="FlowDirection" Value="LeftToRight" />
+                <Setter Property="FontFamily" Value="{StaticResource Font.Mono}" />
+                <Setter Property="FontSize" Value="{StaticResource Size.Small}" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Muted}" />
+            </Style>
+
+            <!-- Buttons 
+
+                 Three weights rather than three colours: the primary is filled with the accent and
+                 appears once (the action that changes the machine), the secondary is a hairline
+                 outline, and the ghost has no border at all for things that only move focus or
+                 open a panel. Corner radius 8 and no drop shadow - on a 460px window a shadow under
+                 every button reads as clutter, and the hairlines already carry the structure. -->
+
+            <Style x:Key="Btn.Base" TargetType="Button">
+                <Setter Property="FontFamily" Value="{StaticResource Font.UI}" />
+                <Setter Property="FontSize" Value="{StaticResource Size.Body}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Ink}" />
+                <Setter Property="Background" Value="{DynamicResource Brush.Surface}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Line.Strong}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="14,9" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="8"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Brush.Hover}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Brush.Press}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.45" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="Btn.Primary" TargetType="Button" BasedOn="{StaticResource Btn.Base}">
+                <Setter Property="Background" Value="{DynamicResource Brush.Accent}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Text}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Brush.Accent.Hover}" />
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Brush.Accent.Hover}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Bd" Property="Opacity" Value="0.85" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.45" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="Btn.Ghost" TargetType="Button" BasedOn="{StaticResource Btn.Base}">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Muted}" />
+                <Setter Property="Padding" Value="10,7" />
+                <Setter Property="FontWeight" Value="Normal" />
+            </Style>
+
+            <Style x:Key="Btn.Compact" TargetType="Button" BasedOn="{StaticResource Btn.Base}">
+                <Setter Property="Padding" Value="11,8" />
+                <Setter Property="FontSize" Value="{StaticResource Size.Small}" />
+            </Style>
+
+            <!-- Inputs  -->
+
+            <Style x:Key="Input.Base" TargetType="Control">
+                <Setter Property="FontFamily" Value="{StaticResource Font.UI}" />
+                <Setter Property="FontSize" Value="{StaticResource Size.Body}" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Ink}" />
+                <Setter Property="Background" Value="{DynamicResource Brush.Input}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Line}" />
+            </Style>
+
+            <Style x:Key="Input.Text" TargetType="TextBox" BasedOn="{StaticResource Input.Base}">
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="11,8" />
+                <Setter Property="CaretBrush" Value="{DynamicResource Brush.Ink}" />
+                <Setter Property="SelectionBrush" Value="{DynamicResource Brush.Accent}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border x:Name="Bd"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="8">
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"
+                                              VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Brush.Line.Strong}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="Input.Search" TargetType="TextBox" BasedOn="{StaticResource Input.Text}">
+                <Setter Property="FontSize" Value="{StaticResource Size.Small}" />
+            </Style>
+
+            <!-- A rectangular label with no click behaviour, used for the address family and the
+                 "set by hand" state: reads as a badge without pretending to be a control. -->
+            <Style x:Key="Chip" TargetType="Border">
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="Padding" Value="7,3" />
+                <Setter Property="Background" Value="{DynamicResource Brush.Input}" />
+                <Setter Property="BorderThickness" Value="0" />
+            </Style>
+
+            <!-- Segmented group selector  -->
+
+            <Style x:Key="Tab" TargetType="RadioButton">
+                <Setter Property="FontFamily" Value="{StaticResource Font.UI}" />
+                <Setter Property="FontSize" Value="{StaticResource Size.Small}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Muted}" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border x:Name="Bd" Background="Transparent" CornerRadius="7"
+                                    Padding="11,6" Margin="0,0,4,0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Brush.Hover}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource Brush.Ink}" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Brush.Accent.Soft}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- List  -->
+
+            <Style x:Key="Row" TargetType="ListBoxItem">
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border x:Name="Bd" Background="Transparent" CornerRadius="8"
+                                    Padding="10,9" Margin="0,0,0,3">
+                                <ContentPresenter HorizontalAlignment="Stretch"
+                                                  VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Brush.Hover}" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Brush.Accent.Soft}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Scrollbars: thin, appearing only where they are. The WPF default is 18px of grey
+                 and is the single most dated-looking part of an otherwise restyled window. -->
+            <Style TargetType="ScrollBar">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Width" Value="8" />
+                <Setter Property="MinWidth" Value="8" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ScrollBar">
+                            <Grid Background="Transparent">
+                                <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                    <Track.Thumb>
+                                        <Thumb>
+                                            <Thumb.Template>
+                                                <ControlTemplate TargetType="Thumb">
+                                                    <Border Background="{DynamicResource Brush.Line.Strong}"
+                                                            CornerRadius="4" Margin="2,1" />
+                                                </ControlTemplate>
+                                            </Thumb.Template>
+                                        </Thumb>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.3" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

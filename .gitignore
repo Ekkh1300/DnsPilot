@@ -1,0 +1,20 @@
+## Build output
+bin/
+obj/
+
+## The installer payload is 66 MB of self-contained .NET - attached to a GitHub release,
+## never committed. Rebuild it with DnsPilot\installer\build.ps1.
+dist/
+
+## Visual Studio / user-local
+*.user
+*.suo
+.vs/
+*.DotSettings.user
+
+## Test results
+TestResults/
+*.trx
+
+## Logs the app writes while running
+*.log
