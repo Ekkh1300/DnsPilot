@@ -42,8 +42,15 @@ response bit set. That check is what separates "this server answered me" from "s
 the path answered instead" — the difference matters on networks where a captive portal or an
 ISP interceptor answers on port 53 for every name it does not recognise.
 
-The wire format is validated in the test suite against .NET's own `DnsClient`, which returns
-the same answers for the same packets.
+The test suite checks the encoder against hand-built byte literals: it asserts the exact
+header flags, the length-prefixed labels, and the A and AAAA type codes, byte by byte. That
+matters more than it sounds — an encoder that emits something merely plausible would still pass
+a looser check, and a query the far end ignores is indistinguishable, from here, from a server
+that is down.
+
+Worth saying plainly: this was cross-checked once against .NET's own resolver during
+development, and both agreed, but that comparison is not a repeatable test. What runs on every
+build is the byte-level check above.
 
 Failures say *why*, rather than one flat "failed":
 
