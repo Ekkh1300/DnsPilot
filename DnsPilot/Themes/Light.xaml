@@ -20,7 +20,16 @@
     <Color x:Key="Color.Paper">#FAFAFB</Color>
     <Color x:Key="Color.Surface">#FFFFFF</Color>
     <Color x:Key="Color.Line">#E7E8EE</Color>
-    <Color x:Key="Color.Line.Strong">#D3D5DF</Color>
+    <!--
+      Hairlines and states, the same three measurements Dark.xaml holds itself to. Line.Strong
+      draws every secondary button's edge, so it is a UI boundary and needs 3:1. The old #D3D5DF
+      measured 1.40 against #FAFAFB, the paper the bottom button row actually sits on, and the
+      buttons had no real outline. #7E859C measures 3.52 there (and 3.67 against the white card),
+      which also survives the ~8% anti-aliasing a 1px hairline picks up when drawn, so the
+      rendered edge still clears 3:1 rather than only the nominal swatch. Hover and press are
+      tints, not boundaries: 1.51 and 1.7, dark enough to be felt on a surface already at white.
+    -->
+    <Color x:Key="Color.Line.Strong">#7E859C</Color>
     <Color x:Key="Color.Ink">#14161C</Color>
     <Color x:Key="Color.Muted">#5A5F6E</Color>
     <Color x:Key="Color.Accent">#4F5BD5</Color>
@@ -30,8 +39,8 @@
     <Color x:Key="Color.Good">#0FA968</Color>
     <Color x:Key="Color.Slow">#D9822B</Color>
     <Color x:Key="Color.Error">#D23F4A</Color>
-    <Color x:Key="Color.Hover">#F1F2F6</Color>
-    <Color x:Key="Color.Press">#E9EAF0</Color>
+    <Color x:Key="Color.Hover">#CFD2E0</Color>
+    <Color x:Key="Color.Press">#C2C6D7</Color>
     <Color x:Key="Color.Input">#F5F6F9</Color>
 
     <SolidColorBrush x:Key="Brush.Paper"       Color="{StaticResource Color.Paper}" />

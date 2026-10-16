@@ -14,7 +14,12 @@
     <Color x:Key="Color.Paper">#101218</Color>
     <Color x:Key="Color.Surface">#181B23</Color>
     <Color x:Key="Color.Line">#282C37</Color>
-    <Color x:Key="Color.Line.Strong">#3A3F4D</Color>
+    <!-- The hairline that draws every secondary button's edge, so it is a UI boundary and needs
+         3:1. The old #3A3F4D measured 1.64 against the surface and 1.78 against the page ground,
+         and the buttons had no visible boundary in dark mode. #6E7689 measures 3.78 on the
+         surface (#181B23) and 4.11 on the ground (#101218), and both survive the ~8% a 1px
+         hairline loses to anti-aliasing when drawn. -->
+    <Color x:Key="Color.Line.Strong">#6E7689</Color>
     <Color x:Key="Color.Ink">#E8EAF0</Color>
     <Color x:Key="Color.Muted">#9AA1B2</Color>
     <Color x:Key="Color.Accent">#7B85F0</Color>
@@ -24,8 +29,13 @@
     <Color x:Key="Color.Good">#35C88A</Color>
     <Color x:Key="Color.Slow">#E8A33D</Color>
     <Color x:Key="Color.Error">#F0727C</Color>
-    <Color x:Key="Color.Hover">#1E222B</Color>
-    <Color x:Key="Color.Press">#232833</Color>
+    <!-- Hover and press tint the surface a step lighter so the pointer leaves a trace. These are
+         not boundaries, so they are held below the hairline: against the surface #181B23 they
+         measure 1.47 and 1.72. The old values (#1E222B, #232833) sat at 1.08 and 1.17 - a hover
+         nobody could see, which reads as a control that is not responding rather than one that
+         is. -->
+    <Color x:Key="Color.Hover">#313849</Color>
+    <Color x:Key="Color.Press">#3A4257</Color>
     <Color x:Key="Color.Input">#1C2029</Color>
 
     <SolidColorBrush x:Key="Brush.Paper"       Color="{StaticResource Color.Paper}" />
