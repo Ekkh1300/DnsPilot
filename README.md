@@ -6,6 +6,8 @@
 
 # DnsPilot
 
+[![CI](https://github.com/Ekkh1300/DnsPilot/actions/workflows/ci.yml/badge.svg)](https://github.com/Ekkh1300/DnsPilot/actions/workflows/ci.yml)
+
 A small, fast DNS switcher for Windows. Pick a network adapter, pick a resolver, apply it.
 
 470 px wide. Runs elevated. English by default, with full Persian support.
@@ -100,13 +102,84 @@ To produce the installer:
 powershell -NoProfile -ExecutionPolicy Bypass -File DnsPilot\installer\build.ps1
 ```
 
-The setup executable is compiled by `csc.exe` from the .NET Framework already present on
-Windows, with the compressed payload embedded as a manifest resource — so it needs no
-installer toolchain to build.
+`DnsPilot\installer\build.ps1` takes every path from its own location (`$PSScriptRoot`), so it
+runs from any working directory, and it does exactly three things:
+
+1. **Publish.** `dotnet publish DnsPilot.csproj -c Release -r win-x64 --self-contained true` into
+   `%TEMP%\dnspilot-payload`, which is cleared first and resolved to a long path — the FileSystem
+   provider will not delete through a `C:\Users\NAME~1\` short name. *Self-contained* is what lets
+   the installer promise no runtime prerequisite: 464 files, 160 MB.
+2. **Compress.** `Compress-Archive` of that folder into `DnsPilot\dist\payload.zip` (67 MB).
+3. **Compile.** `Setup.cs` through
+   `C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe` — the C# compiler that ships inside
+   Windows — with `/resource:payload.zip,dnspilot.payload.zip`, which turns the payload into a
+   manifest resource of the installer itself. That single flag is the whole reason there is no
+   Inno Setup or WiX step.
+
+Step 1 needs the .NET 8 SDK and step 3 needs the .NET Framework 4 compiler; both are already on
+Windows 10 or later, so nothing extra has to be installed to build the installer. The script
+prints the MD5 of `DnsPilot\dist\DnsPilot-Setup.exe` as its last line — that is the hash quoted
+in the release notes — and throws rather than carrying on at any of the three steps.
 
 The icon is generated rather than drawn by hand: `tools\New-Icon.ps1` renders every frame from
 geometry and writes `DnsPilot\Assets\dns-pilot.ico`. That script is the source of the icon —
 the `.ico` is its output, so a change belongs in the script, not in the binary.
+
+## Repository scripts
+
+`tools\` holds everything that is not `dotnet build`, and each script says what it needs:
+
+| Script | What it does | Runs in CI |
+| --- | --- | --- |
+| `tools\New-Icon.ps1` | Draws `DnsPilot\Assets\dns-pilot.ico` from geometry | no |
+| `tools\Capture-Screenshots.ps1` | Recaptures the four screenshots above (self-elevates) | no |
+| `tools\Import-DnsJumper.ps1` | Regenerates `DnsPilot\Data\presets.json` from DNS Jumper's INI | no |
+| `tools\Sweep-Presets.ps1`, `tools\Measure-Dns.ps1`, `tools\Recheck.ps1` | Measure resolvers over a live network | no |
+| `DnsPilot\installer\build.ps1` | Builds the installer | yes |
+
+The four that stay out of CI do so for four different reasons, and the differences matter:
+
+- **The icon would have to be compared byte for byte.** Its output is committed, so a CI check
+  would mean regenerating it on the runner and asserting equality — but GDI+ rasterises with
+  whatever version the runner ships, and an anti-aliasing difference would fail a build over
+  nothing. What CI checks instead is the committed file's *shape*: a real `.ico` header and frame
+  count, which catches the failure that actually matters — shipping the generic Windows icon
+  again.
+- **The screenshots need this machine's desktop.** The screenshot script drives the window
+  through UI Automation and has to run at the same integrity level as the elevated app; a runner
+  has no desktop to photograph.
+- **The importer needs a file that is not in this repository.** DNS Jumper's `DnsJumper.ini` is not
+  redistributed here, so nobody who has not downloaded it can repeat the conversion. CI checks the
+  *result* instead: `PresetStoreTests` parses the committed `presets.json` and fails on a
+  malformed one.
+- **The sweep scripts describe one network on one day.** Their numbers are already recorded in
+  `tools\sweep-results.json`; rerunning them on a shared runner would produce figures nobody can
+  compare with those.
+
+### The two machine-specific paths
+
+`tools\Import-DnsJumper.ps1` is the only file in the repository that names a path on this
+developer's disk:
+
+```powershell
+-Source      default 'C:\dns\DNS.Jumper.2.3\DnsJumper.ini'
+-Destination default 'E:\dnspilot\DnsPilot\Data\presets.json'
+```
+
+Both are parameters rather than constants, so they are visible at the call site and can be
+replaced without touching the script:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\Import-DnsJumper.ps1 `
+    -Source D:\DnsJumper.ini -Destination DnsPilot\Data\presets.json
+```
+
+A missing source fails immediately with that message instead of a `ReadAllBytes` error, and
+running it on this machine reproduces the committed `presets.json` byte for byte.
+
+Nothing else in the repository depends on `C:\` or `E:\`: `build.ps1` derives every path from its
+own location, and `presets.json` is compiled in as an `EmbeddedResource`, so the app reads it
+from inside the assembly rather than through a file path.
 
 ## Tests
 
@@ -117,6 +190,17 @@ a test completed.
 ```powershell
 dotnet test DnsPilot.Tests\DnsPilot.Tests.csproj
 ```
+
+### Continuous integration
+
+Every push and pull request to `master` runs [the CI workflow](.github/workflows/ci.yml): build
+both projects, run the suite, confirm the generated icon and the five images this README embeds
+are present, then build the installer and keep it as a workflow artifact. The runner is Windows,
+because `net8.0-windows` cannot load anywhere else.
+
+What it never does is touch DNS. The suite contains no test that changes the machine's network
+configuration and none that reaches the network at all — which is precisely what makes it safe
+to run on a shared runner. See the comment at the top of `DnsPilot.Tests.csproj`.
 
 ## Notes
 

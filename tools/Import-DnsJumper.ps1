@@ -11,9 +11,30 @@
 # The country prefix ("US - ", "AU - ") is split off, because in the UI the country is metadata
 # about a server and not part of its name.
 
+# -Source and -Destination are the only machine-specific values in this repository, and neither
+# says anything about DnsPilot: the INI is a file downloaded from DNS Jumper (not redistributed
+# here), and where it happens to sit on this machine is a fact about this machine. They are
+# parameters rather than constants so the paths are visible at the call site and can be
+# overridden without editing the script:
+#
+#   .\Import-DnsJumper.ps1 -Source D:\DnsJumper.ini -Destination ..\DnsPilot\Data\presets.json
+#
+# The defaults below are this developer's layout, kept so the script still runs unchanged here.
+param(
+    [Parameter(Mandatory = $false)]
+    [string]$Source = 'C:\dns\DNS.Jumper.2.3\DnsJumper.ini',
+
+    [Parameter(Mandatory = $false)]
+    [string]$Destination = 'E:\dnspilot\DnsPilot\Data\presets.json'
+)
+
 $ErrorActionPreference = 'Stop'
-$src = 'C:\dns\DNS.Jumper.2.3\DnsJumper.ini'
-$out = 'E:\dnspilot\DnsPilot\Data\presets.json'
+
+if (-not (Test-Path -LiteralPath $Source)) {
+    throw "source INI not found at '$Source'. It is not part of this repository - pass -Source <path to DnsJumper.ini>."
+}
+$src = $Source
+$out = $Destination
 
 # The published list is extensive but not maintained, and it still carries providers that stopped
 # operating public resolvers years ago. Swept on 2026-10-15: five probes each, 2.5 s apart, and
