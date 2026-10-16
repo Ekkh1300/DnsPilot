@@ -68,7 +68,7 @@ public partial class MainWindow : Window
 
             _tray = new Forms.NotifyIcon
             {
-                Icon = SystemIcons.Application,
+                Icon = LoadAppIcon(),
                 Text = Lang.T("tray_tip"),
                 Visible = true,
             };
@@ -99,6 +99,50 @@ public partial class MainWindow : Window
     {
         if (_trayMenu is null) return;
         _trayMenu.IsOpen = true;
+    }
+
+    // Reads the .ico that the csproj compiled into this assembly as a Resource, and returns a
+    // copy of the frame that best matches the tray's own pixel size. The copy matters:
+    // System.Drawing.Icon(Stream) keeps using the stream it was given, and the stream here is
+    // gone by the time the tray is painted - constructing from the stream and then cloning at a
+    // fixed size is what makes the returned handle independent of it.
+    private static System.Drawing.Icon LoadAppIcon()
+    {
+        var want = TrayIconSize();
+
+        var info = System.Windows.Application.GetResourceStream(
+            new Uri("pack://application:,,,/Assets/dns-pilot.ico"));
+        if (info?.Stream is null)
+        {
+            // Not reachable in a build that shipped the icon, but a missing resource must not
+            // take the tray with it.
+            App.Log("app icon resource missing");
+            return SystemIcons.Application;
+        }
+
+        using (info.Stream)
+        using (var full = new System.Drawing.Icon(info.Stream))
+        {
+            return new System.Drawing.Icon(full, want.Width, want.Height);
+        }
+    }
+
+    // The size the notification area actually draws at, read straight from the metric rather
+    // than derived from a formula that then has to be trusted: SystemInformation.SmallIconSize is
+    // SM_CXSMICON/SM_CYSMICON. Asking the .ico for that frame lets Windows place it without
+    // blurring a larger one down to the tray.
+    private static System.Drawing.Size TrayIconSize()
+    {
+        var want = System.Windows.Forms.SystemInformation.SmallIconSize;
+
+        // The frames the .ico actually carries, in the order the generator writes them.
+        int[] have = { 16, 24, 32, 48, 64, 128, 256 };
+        var best = have[0];
+        foreach (var s in have)
+        {
+            if (Math.Abs(s - want.Width) < Math.Abs(best - want.Width)) best = s;
+        }
+        return new System.Drawing.Size(best, best);
     }
 
     private void ShowFromTray()

@@ -27,6 +27,14 @@
     <Version>1.0.0</Version>
     <LangVersion>latest</LangVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!--
+      The app has one icon and every surface shows it: the title bar, the taskbar, Alt-Tab, the
+      tray and Explorer. It is a generated file (tools\New-Icon.ps1 draws it from geometry), so
+      the brand colour lives in that script rather than in binary artwork nobody can edit.
+      ApplicationIcon puts it in the exe's Win32 resources; the Resource item below is what makes
+      Icon= in XAML and the tray NotifyIcon read the very same file instead of a second copy.
+    -->
+    <ApplicationIcon>Assets\dns-pilot.ico</ApplicationIcon>
     <AssemblyTitle>DnsPilot</AssemblyTitle>
     <Product>DnsPilot</Product>
     <Description>Switch DNS servers on a network adapter</Description>
@@ -45,6 +53,17 @@
   <!-- Presets are data, not code, so they ship as one file the app reads at start. -->
   <ItemGroup>
     <EmbeddedResource Include="Data\presets.json" />
+  </ItemGroup>
+
+  <!--
+    The icon. Resource (not Content, not EmbeddedResource) so WPF compiles it into the assembly
+    and a pack URI can reach it: Window.Icon takes it for the title bar, and the tray reads the
+    same bytes at runtime. Shipping it as a loose file instead would mean the exe could lose its
+    own icon the moment a copy step was forgotten.
+  -->
+  <ItemGroup>
+    <None Remove="Assets\dns-pilot.ico" />
+    <Resource Include="Assets\dns-pilot.ico" />
   </ItemGroup>
 
   <!--

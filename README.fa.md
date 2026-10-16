@@ -1,5 +1,9 @@
 <p align="right"><a href="README.md">English</a></p>
 
+<p align="center">
+  <img src="docs/dns-pilot-icon.png" width="104" alt="آیکون DnsPilot">
+</p>
+
 # DnsPilot
 
 یک ابزار کوچک و سریع برای تعویض DNS در ویندوز. یک کارت شبکه انتخاب کنید، یک سرور انتخاب کنید و اعمال کنید.
@@ -71,6 +75,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File DnsPilot\installer\build.ps1
 ```
 
 فایل نصب با `csc.exe` از .NET Framework موجود در ویندوز ساخته می‌شود و بدنه فشرده‌شده به صورت یک منبع درون‌نهاده دارد — پس برای ساخت به هیچ ابزار نصب‌کننده‌ای نیاز نیست.
+
+آیکون دست‌کشیده نیست، بلکه تولید می‌شود: `tools\New-Icon.ps1` هر قاب را از روی هندسه رسم می‌کند و `DnsPilot\Assets\dns-pilot.ico` را می‌سازد. منبع آیکون همان اسکریپت است؛ فایل `.ico` خروجی آن است، پس هر تغییری باید در اسکریپت انجام شود، نه در فایل باینری.
 
 ## تست‌ها
 

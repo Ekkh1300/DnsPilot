@@ -1,5 +1,9 @@
 <p align="right"><a href="README.fa.md">فارسی</a></p>
 
+<p align="center">
+  <img src="docs/dns-pilot-icon.png" width="104" alt="DnsPilot icon">
+</p>
+
 # DnsPilot
 
 A small, fast DNS switcher for Windows. Pick a network adapter, pick a resolver, apply it.
@@ -99,6 +103,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File DnsPilot\installer\build.ps1
 The setup executable is compiled by `csc.exe` from the .NET Framework already present on
 Windows, with the compressed payload embedded as a manifest resource — so it needs no
 installer toolchain to build.
+
+The icon is generated rather than drawn by hand: `tools\New-Icon.ps1` renders every frame from
+geometry and writes `DnsPilot\Assets\dns-pilot.ico`. That script is the source of the icon —
+the `.ico` is its output, so a change belongs in the script, not in the binary.
 
 ## Tests
 
