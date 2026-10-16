@@ -16,6 +16,13 @@ $dotnet = Join-Path $env:LOCALAPPDATA 'dotnet\dotnet.exe'
 $csc    = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 
 if (-not (Test-Path $dotnet)) { $dotnet = 'C:\Program Files\dotnet\dotnet.exe' }
+# A developer machine installs dotnet in %LOCALAPPDATA%; the CI runner has it on PATH instead.
+# Both are looked for before giving up, so the script runs in either place unmodified.
+if (-not (Test-Path $dotnet)) {
+    $onPath = Get-Command dotnet -ErrorAction SilentlyContinue
+    if ($onPath) { $dotnet = $onPath.Source }
+}
+if (-not (Test-Path $dotnet)) { throw "dotnet not found (tried %LOCALAPPDATA%\dotnet, Program Files, then PATH)" }
 if (-not (Test-Path $csc))    { throw "csc.exe not found at $csc" }
 
 New-Item -ItemType Directory -Force -Path $dist | Out-Null

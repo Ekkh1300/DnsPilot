@@ -1,0 +1,99 @@
+# Builds both projects and runs the suite on every push and pull request.
+#
+# Windows only, and not for decoration: DnsPilot is a WPF app (net8.0-windows), so neither Linux
+# nor macOS can even load the projects. The runner also has the .NET Framework 4 csc.exe that the
+# installer step compiles with, and a desktop-less environment is fine for everything below
+# because nothing here clicks, photographs or writes to the machine's network configuration.
+#
+# The suite deliberately contains no test that changes DNS and no test that reaches the network
+# (see DnsPilot.Tests.csproj). That is the precondition for running it on a shared runner at all:
+# a green build that quietly rewrote a resolver would be worse than no build.
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build the app
+        run: dotnet build DnsPilot\DnsPilot.csproj -c Release --nologo
+
+      # The tests reference the app project, so this compiles the test assembly too. The suite is
+      # unit-level: the wire format, the stores, the validation between typed text and a command
+      # that netsh will run, and the text table.
+      - name: Run the tests
+        run: dotnet test DnsPilot.Tests\DnsPilot.Tests.csproj -c Release --nologo
+
+      - name: The generated icon is committed
+        # tools\New-Icon.ps1 writes this file; a build that silently lost it would ship the
+        # generic Windows icon in the title bar, taskbar and tray again.
+        run: |
+          $ico = 'DnsPilot\Assets\dns-pilot.ico'
+          if (-not (Test-Path $ico)) { Write-Error "missing $ico"; exit 1 }
+          $b = [IO.File]::ReadAllBytes($ico)
+          if ($b[0] -ne 0 -or $b[1] -ne 0 -or $b[2] -ne 1 -or $b[3] -ne 0) {
+            Write-Error "$ico is not a valid .ico (bad header)"; exit 1
+          }
+          Write-Host ("{0}: {1} bytes, {2} frames" -f $ico, $b.Length, $b[4])
+        shell: powershell
+
+      - name: Screenshots and icon referenced by the README exist
+        # The README embeds these; a rename that broke the links would otherwise only be noticed
+        # by a reader.
+        run: |
+          $required = @(
+            'docs\dns-pilot-icon.png',
+            'docs\screenshots\dns-pilot-en-light.png',
+            'docs\screenshots\dns-pilot-en-dark.png',
+            'docs\screenshots\dns-pilot-fa-light.png',
+            'docs\screenshots\dns-pilot-fa-dark.png'
+          )
+          $missing = $required | Where-Object { -not (Test-Path $_) }
+          if ($missing) { Write-Error ("missing: " + ($missing -join ', ')); exit 1 }
+          Write-Host ("all {0} images present" -f $required.Count)
+        shell: powershell
+
+  installer:
+    name: Build the installer
+    needs: build-and-test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Stages a self-contained publish, zips it, and compiles Setup.cs with the C# compiler that
+      # ships inside Windows. It throws rather than continuing on any failure, and prints the
+      # MD5 of the result, so a broken installer cannot pass silently.
+      - name: Build DnsPilot-Setup.exe
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File DnsPilot\installer\build.ps1
+        shell: powershell
+
+      - name: Keep the installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: DnsPilot-Setup
+          path: DnsPilot/dist/DnsPilot-Setup.exe
+          if-no-files-found: error
