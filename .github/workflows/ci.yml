@@ -8,6 +8,11 @@
 # The suite deliberately contains no test that changes DNS and no test that reaches the network
 # (see DnsPilot.Tests.csproj). That is the precondition for running it on a shared runner at all:
 # a green build that quietly rewrote a resolver would be worse than no build.
+#
+# On version pins: these are the majors whose runtime is node24. The v4 line targets node20, which
+# GitHub now runs on node24 under a deprecation annotation. Bump by reading the tag's action.yml
+# for `using: node24`, not by assuming the higher major means the newer runtime - as of writing,
+# upload-artifact@v5 is still node20 while @v6 and @v7 are not.
 name: CI
 
 on:
@@ -26,10 +31,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install .NET 8 SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 8.0.x
 
@@ -77,10 +82,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install .NET 8 SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 8.0.x
 
@@ -92,7 +97,7 @@ jobs:
         shell: powershell
 
       - name: Keep the installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: DnsPilot-Setup
           path: DnsPilot/dist/DnsPilot-Setup.exe
