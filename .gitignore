@@ -18,3 +18,9 @@ TestResults/
 
 ## Logs the app writes while running
 *.log
+
+## Release-process working files (Upload-Release.ps1 regenerates them)
+upload-result.json
+release-body.md
+probe*.txt
+probe-result.json
