@@ -153,6 +153,13 @@ public static class Lang
         ["status_working"]      = ("Applying…", "در حال اعمال…"),
         ["status_applied"]      = ("Now using {0}", "اکنون از {0} استفاده می‌شود"),
         ["status_dhcp"]         = ("Back to automatic", "بازگشت به خودکار"),
+        // Said when netsh claimed success and the registry said otherwise: with the exit code
+        // unreliable (a refused line still exits 0), what marks a real application is the
+        // configuration read back from the adapter, and its absence gets its own sentence.
+        ["status_not_applied"]  = ("The change did not take effect", "تغییر اعمال نشد"),
+        ["detail_not_applied"]  = ("Windows still reports this configuration: {0}", "ویندوز همچنان این پیکربندی را گزارش می‌کند: {0}"),
+        ["detail_state_none"]   = ("no configuration for this family", "هیچ پیکربندی‌ای برای این خانواده نیست"),
+        ["detail_state_dhcp"]   = ("DHCP (automatic)", "DHCP (خودکار)"),
         ["status_flushed"]      = ("Resolver cache cleared", "کش DNS پاک شد"),
         ["status_restored"]     = ("Restored to what it was before", "حالت قبلی بازگردانده شد"),
         ["status_nothing_restore"] = ("Nothing has been recorded to restore", "چیزی برای بازگردانی ثبت نشده است"),

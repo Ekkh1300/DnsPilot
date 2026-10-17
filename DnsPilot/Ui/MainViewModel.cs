@@ -460,6 +460,29 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             row.IsCurrent = row.Server.Primary is not null && current.Contains(row.Server.Primary);
     }
 
+    /// <summary>
+    /// Compares what the adapter reports now against what the change asked for. Addresses are
+    /// compared parsed rather than as text, so an IPv6 that netsh re-formatted still matches the
+    /// one the user picked; a missing, DHCP-driven or unparsable state matches nothing.
+    /// </summary>
+    private static bool SameResolvers(DnsState? state, IReadOnlyList<string> want)
+    {
+        if (state is null || state.IsDhcp || state.StaticServers.Count != want.Count) return false;
+        for (var i = 0; i < want.Count; i++)
+        {
+            if (!System.Net.IPAddress.TryParse(state.StaticServers[i], out var reported)) return false;
+            if (!System.Net.IPAddress.TryParse(want[i], out var asked)) return false;
+            if (!reported.Equals(asked)) return false;
+        }
+        return true;
+    }
+
+    /// <summary>The configuration Windows says it holds, for the detail line of a refused change.</summary>
+    private static string DescribeState(DnsState? state)
+        => state is null ? Lang.T("detail_state_none")
+         : state.IsDhcp ? Lang.T("detail_state_dhcp")
+         : string.Join(" / ", state.StaticServers);
+
     // --- actions ----------------------------------------------------------------------------
 
     private async Task ApplyAsync()
@@ -468,6 +491,10 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         var adapter = _selectedAdapter;
         if (row is null) { SetStatus("status_nothing_selected"); return; }
         if (adapter is null) { SetStatus("status_no_adapter"); return; }
+
+        var want = row.HasSecondary
+            ? new[] { row.Server.Primary, row.Server.Secondary }
+            : new[] { row.Server.Primary };
 
         await RunAsync(async () =>
         {
@@ -482,6 +509,16 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             if (!result.Ok)
             {
                 SetStatus("status_failed", result.Output);
+                return false;
+            }
+
+            // netsh's exit code is not a promise: a line whose parameters netsh refuses still
+            // exits 0 (observed on `set dnsservers` and `add dnsservers` alike). What decides
+            // is what the adapter is now set to, read straight back from the registry.
+            var after = DnsService.Read(adapter.Id, _family);
+            if (!SameResolvers(after, want))
+            {
+                SetStatus("status_not_applied", Lang.T("detail_not_applied", DescribeState(after)));
                 return false;
             }
 
@@ -500,6 +537,14 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             _backups.RememberIfAbsent(adapter, _family);
             var result = await DnsService.UseDhcpAsync(adapter.Alias, _family);
             if (!result.Ok) { SetStatus("status_failed", result.Output); return false; }
+
+            var after = DnsService.Read(adapter.Id, _family);
+            if (after is null || !after.IsDhcp)
+            {
+                SetStatus("status_not_applied", Lang.T("detail_not_applied", DescribeState(after)));
+                return false;
+            }
+
             SetStatus("status_dhcp");
             return true;
         });
@@ -515,11 +560,30 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
         await RunAsync(async () =>
         {
-            var result = saved.WasDhcp
-                ? await DnsService.UseDhcpAsync(adapter.Alias, _family)
-                : await DnsService.ApplyAsync(adapter.Alias, _family,
-                                               saved.Servers.FirstOrDefault() ?? "",
-                                               saved.Servers.Skip(1).FirstOrDefault());
+            Shell.Result result;
+            if (saved.WasDhcp)
+            {
+                result = await DnsService.UseDhcpAsync(adapter.Alias, _family);
+                var after = DnsService.Read(adapter.Id, _family);
+                if (after is null || !after.IsDhcp)
+                {
+                    SetStatus("status_not_applied", Lang.T("detail_not_applied", DescribeState(after)));
+                    return false;
+                }
+            }
+            else
+            {
+                result = await DnsService.ApplyAsync(adapter.Alias, _family,
+                                                     saved.Servers.FirstOrDefault() ?? "",
+                                                     saved.Servers.Skip(1).FirstOrDefault());
+                var want = saved.Servers.ToArray();
+                var after = DnsService.Read(adapter.Id, _family);
+                if (!SameResolvers(after, want))
+                {
+                    SetStatus("status_not_applied", Lang.T("detail_not_applied", DescribeState(after)));
+                    return false;
+                }
+            }
 
             if (!result.Ok) { SetStatus("status_failed", result.Output); return false; }
             _backups.Forget(adapter.Id, _family);
@@ -749,10 +813,12 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     {
         _statusKey = key;
         _statusArgs = args;
-        // Only a refusal carries a detail worth expanding: the raw netsh output is what names the
-        // reason. For every other status the arguments are the message's own substitutions and
-        // would read as noise if shown twice.
-        _statusDetail = key == "status_failed" && args.Length > 0 ? args[^1]?.ToString() : null;
+        // Only a refusal or a silent non-application carries a detail worth expanding: the raw
+        // netsh output is what names the former, the read-back state what names the latter. For
+        // every other status the arguments are the message's own substitutions and would read as
+        // noise if shown twice.
+        _statusDetail = (key == "status_failed" || key == "status_not_applied") && args.Length > 0
+            ? args[^1]?.ToString() : null;
         Raise();
         Raise(nameof(StatusText));
         Raise(nameof(StatusDetail));

@@ -317,6 +317,7 @@
                   written nowhere and the [search] text key referenced by nothing. -->
             <Grid Grid.Row="0" VerticalAlignment="Top">
                 <TextBox Style="{StaticResource Input.Search}"
+                         AutomationProperties.AutomationId="SearchField"
                          Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Margin="13,9,13,0"
                            VerticalAlignment="Center"
@@ -482,10 +483,12 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
+                        AutomationProperties.AutomationId="Apply"
                         Command="{Binding ApplyCommand}"
                         Content="{Binding [action_apply]}"
                         Style="{StaticResource Btn.Primary}" />
                 <Button Grid.Column="2"
+                        AutomationProperties.AutomationId="ApplyDhcp"
                         Command="{Binding ApplyDhcpCommand}"
                         Content="{Binding [action_apply_dhcp]}"
                         Style="{StaticResource Btn.Base}" />
@@ -493,14 +496,17 @@
 
             <UniformGrid Columns="3">
                 <Button Margin="0,0,7,0"
+                        AutomationProperties.AutomationId="TestSpeed"
                         Command="{Binding TestCommand}"
                         Content="{Binding [action_test]}"
                         Style="{StaticResource Btn.Compact}" />
                 <Button Margin="0,0,7,0"
+                        AutomationProperties.AutomationId="Flush"
                         Command="{Binding FlushCommand}"
                         Content="{Binding [action_flush]}"
                         Style="{StaticResource Btn.Compact}" />
-                <Button Command="{Binding RestoreCommand}"
+                <Button AutomationProperties.AutomationId="Restore"
+                        Command="{Binding RestoreCommand}"
                         Content="{Binding [action_restore]}"
                         Style="{StaticResource Btn.Compact}" />
             </UniformGrid>

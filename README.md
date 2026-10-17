@@ -189,9 +189,10 @@ from inside the assembly rather than through a file path.
 
 ## Tests
 
-73 tests, covering the DNS wire format, the latency loop (measured against a resolver the test
-itself runs on `127.0.0.1`), the preset store, and the view model — including the failure-reason
-plumbing and the regression that stopped the **Use** button from enabling after a test completed.
+76 tests, covering the DNS wire format, the latency loop (measured against a resolver the test
+itself runs on `127.0.0.1`), the preset store, the shell runner against the machine's real netsh
+(read-only commands only), and the view model — including the failure-reason plumbing and the
+regression that stopped the **Use** button from enabling after a test completed.
 
 ```powershell
 dotnet test DnsPilot.Tests\DnsPilot.Tests.csproj
