@@ -61,9 +61,16 @@ public partial class MainWindow : Window
             _trayMenu = new System.Windows.Controls.ContextMenu
             {
                 Placement = System.Windows.Controls.Primitives.PlacementMode.Mouse,
+                Style = (Style)System.Windows.Application.Current.FindResource("Menu.Tray"),
+            };
+            _trayShow.Style = (Style)System.Windows.Application.Current.FindResource("Menu.TrayItem");
+            _trayExit.Style = (Style)System.Windows.Application.Current.FindResource("Menu.TrayItem");
+            var traySep = new System.Windows.Controls.Separator
+            {
+                Style = (Style)System.Windows.Application.Current.FindResource("Menu.TraySep"),
             };
             _trayMenu.Items.Add(_trayShow);
-            _trayMenu.Items.Add(new System.Windows.Controls.Separator());
+            _trayMenu.Items.Add(traySep);
             _trayMenu.Items.Add(_trayExit);
 
             _tray = new Forms.NotifyIcon
@@ -76,7 +83,9 @@ public partial class MainWindow : Window
             // Both clicks are handled here rather than by assigning ContextMenuStrip, which is a
             // WinForms type: giving it the WinForms menu would render that menu in system colours
             // beside a themed window, and it would not follow the language either. The WPF menu is
-            // opened by hand at the cursor instead, so it inherits the theme like everything else.
+            // opened by hand at the cursor, styled explicitly with Menu.Tray above (explicit,
+            // because a ContextMenu with no logical parent is not guaranteed to pick up
+            // Application-level implicit styles), and given its direction on every language change.
             _tray.MouseClick += (_, e) =>
             {
                 if (e.Button == Forms.MouseButtons.Left) { ShowFromTray(); return; }
@@ -226,6 +235,12 @@ public partial class MainWindow : Window
         Root.FlowDirection = Lang.IsRtl ? System.Windows.FlowDirection.RightToLeft
                                        : System.Windows.FlowDirection.LeftToRight;
         Title = Lang.T("app_name");
+
+        // The tray menu has no parent in the tree to inherit direction from, so it is set here
+        // with everything else that is re-worded - the menu itself is never rebuilt.
+        if (_trayMenu is not null)
+            _trayMenu.FlowDirection = Lang.IsRtl ? System.Windows.FlowDirection.RightToLeft
+                                                 : System.Windows.FlowDirection.LeftToRight;
 
         if (_trayShow is not null) _trayShow.Header = Lang.T("tray_show");
         if (_trayExit is not null) _trayExit.Header = Lang.T("tray_exit");

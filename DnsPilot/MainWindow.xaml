@@ -9,6 +9,7 @@
         MinWidth="410"
         MinHeight="540"
         Background="{DynamicResource Brush.Window}"
+        Foreground="{DynamicResource Brush.Ink}"
         FontFamily="{StaticResource Font.UI}"
         FontSize="13"
         WindowStartupLocation="CenterScreen"
@@ -21,12 +22,19 @@
       and there is no state that needs more room to be understood - the list scrolls and nothing
       else competes for height. MinHeight exists so the window can be made shorter than it opens,
       never so it can be dragged down to a stub where the Apply button disappears off the bottom.
+
+      Foreground is deliberate and window-wide: bare TextBlocks inherit it, instead of falling to
+      the SystemColors.ControlText that implicit Control styles (WPF's default ListBox style, most
+      notably) stamp onto every intermediate control. That default was black text - which on the
+      dark theme put the server names at black-on-dark and made them effectively invisible, while
+      in light mode the mistake hid behind white paper.
     -->
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolVis" />
         <ui:InverseBoolToVisibility x:Key="InvBoolVis" />
         <ui:StringToVisibility x:Key="StrVis" />
+        <ui:EmptyStringToVisibility x:Key="EmptyStrVis" />
         <ui:BrushKeyToBrush x:Key="BrushKey" />
         <ui:EnumEquals x:Key="EnumEq" />
 
@@ -304,9 +312,20 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0"
-                     Style="{StaticResource Input.Search}"
-                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+            <!-- The placeholder is an overlay that disappears with the first typed character:
+                  an empty field used to look like an empty card, with the "Find a server" hint
+                  written nowhere and the [search] text key referenced by nothing. -->
+            <Grid Grid.Row="0" VerticalAlignment="Top">
+                <TextBox Style="{StaticResource Input.Search}"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Margin="13,9,13,0"
+                           VerticalAlignment="Center"
+                           IsHitTestVisible="False"
+                           FontSize="{StaticResource Size.Small}"
+                           Foreground="{DynamicResource Brush.Muted}"
+                           Text="{Binding [search]}"
+                           Visibility="{Binding SearchText, Converter={StaticResource EmptyStrVis}}" />
+            </Grid>
 
             <Grid Grid.Row="1" Margin="0,9,0,0">
                 <StackPanel Orientation="Horizontal">
@@ -510,10 +529,9 @@
                             </EventTrigger>
                         </Ellipse.Triggers>
                     </Ellipse>
-                    <TextBlock Foreground="{DynamicResource Brush.Accent}"
-                               FontSize="11.5"
-                               Text="{Binding [action_testing]}"
-                               Visibility="{Binding IsTesting, Converter={StaticResource BoolVis}}" />
+                    <!-- The status text itself carries the test progress ("Measuring 12 of
+                         63 servers…"), so a second word here would repeat it; the ring is the
+                         only extra cue the test needs. -->
                     <TextBlock x:Name="StatusText"
                                Foreground="{DynamicResource Brush.Muted}"
                                FontSize="11.5"

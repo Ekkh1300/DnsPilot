@@ -93,3 +93,18 @@ public sealed class StringToVisibility : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         => throw new NotSupportedException();
 }
+
+/// <summary>
+/// Visible only when the string is empty or missing - the mirror of
+/// <see cref="StringToVisibility"/>, written for the search field's placeholder: a hint that
+/// exists exactly as long as the user has not typed anything, and gets out of the way the moment
+/// they do.
+/// </summary>
+public sealed class EmptyStringToVisibility : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value is string s && !string.IsNullOrEmpty(s) ? Visibility.Collapsed : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotSupportedException();
+}

@@ -33,8 +33,8 @@ public sealed record AdapterInfo(
 /// The filter is the whole job here. Windows reports a great many interfaces - loopback, the
 /// Teredo tunnel, each Hyper-V vEthernet, each VPN's own adapter - and offering all of them
 /// means the user has to work out which row is the network they are on. So: anything not Up is
-/// dropped, loopback is dropped, and adapters Windows has not configured for a family do not
-/// offer that family.
+/// dropped, loopback is dropped, and a family is offered only when the adapter has that
+/// family's registry key at all.
 ///
 /// Virtual adapters are kept rather than hidden, because they are frequently the right answer -
 /// someone on a VPN wants the VPN's adapter, and someone on a phone hotspot wants that. What
@@ -54,8 +54,16 @@ public static class AdapterService
             if (string.IsNullOrWhiteSpace(nic.Name)) continue;
 
             var id = nic.Id;
-            var v4 = nic.Supports(NetworkInterfaceComponent.IPv4) ? DnsService.Read(id, DnsFamily.IPv4) : null;
-            var v6 = nic.Supports(NetworkInterfaceComponent.IPv6) ? DnsService.Read(id, DnsFamily.IPv6) : null;
+
+            // Both families are read straight from their registry keys rather than gated behind
+            // NetworkInterface.Supports(). That call reports protocol bindings and is known to
+            // under-report IPv6 on some adapters - a machine whose Tcpip6 key is real would have
+            // its IPv6 half hidden from the list by a probe that said no. The key's existence is
+            // the same thing netsh writes to and therefore the same thing the switcher can
+            // change, so it is the better authority: DnsService.Read returns null exactly when
+            // Windows has never configured the family on this adapter.
+            var v4 = DnsService.Read(id, DnsFamily.IPv4);
+            var v6 = DnsService.Read(id, DnsFamily.IPv6);
 
             // An adapter with neither a v4 nor a v6 key is not one anyone can set a resolver on.
             if (v4 is null && v6 is null) continue;

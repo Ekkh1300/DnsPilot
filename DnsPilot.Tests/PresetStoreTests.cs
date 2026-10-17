@@ -2,6 +2,7 @@ using System.IO;
 
 using DnsPilot.Models;
 using DnsPilot.Services;
+using DnsPilot.Ui;
 
 using Xunit;
 
@@ -231,6 +232,7 @@ public class PresetStoreTests
 
             Assert.Empty(servers);
             Assert.NotNull(problem);
+            Assert.Equal("custom_unreadable", problem!.Key);
         }
         finally { Directory.Delete(dir, recursive: true); }
     }
@@ -259,7 +261,17 @@ public class PresetStoreTests
             Assert.Single(servers);
             Assert.Equal("8.8.8.8", servers[0].Primary);
             Assert.NotNull(problem);
-            Assert.Contains("skipped", problem!);
+            Assert.Equal("custom_skipped", problem!.Key);
+
+            // The key has to come out as words in the language the app is running in - that is
+            // the whole reason the problem is a key rather than English text from Services.
+            Lang.Set(Language.English);
+            Assert.Contains("skipped", Lang.T(problem.Key, problem.Args));
+
+            Lang.Set(Language.Persian);
+            Assert.Contains("نادیده", Lang.T(problem.Key, problem.Args));
+
+            Lang.Set(Language.English);
         }
         finally { Directory.Delete(dir, recursive: true); }
     }

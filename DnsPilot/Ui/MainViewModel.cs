@@ -330,7 +330,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         var (servers, problem) = _presets.TryLoadCustom();
         _custom = servers;
         if (problem is not null)
-            ErrorText = $"{Lang.T("error_custom_read")}: {problem}";
+            ErrorText = $"{Lang.T("error_custom_read")}: {Lang.T(problem.Key, problem.Args)}";
     }
 
     private void LoadAdapters()
@@ -546,23 +546,37 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
         IsBusy = true;
         IsTesting = true;
-        SetStatus("status_testing", targets.Count);
+        SetStatus("status_testing", 0, targets.Count);
         ErrorText = null;
+
+        var answered = 0;
+        var missed = 0;
+
+        // Reports arrive through Progress, which captures the UI thread's context at construction
+        // and marshals each report back onto it: the tester measures from its own worker tasks,
+        // and every completed measurement fills its row in as it lands, instead of all rows
+        // appearing only when the whole sweep has finished. The wording of the status stays one
+        // step ahead of what has already been reported - "0 of 63" reads as the list about to be
+        // tested, not as progress that never moved.
+        var progress = new Progress<LatencyResult>(r =>
+        {
+            if (!_rows.TryGetValue(r.Server, out var row)) return;
+            if (r.Ok) { row.Milliseconds = r.Milliseconds; row.TestFailed = false; row.ErrorKey = null; row.ErrorDetail = null; answered++; }
+            else { row.Milliseconds = null; row.TestFailed = true; row.ErrorKey = r.Error; row.ErrorDetail = r.Detail; missed++; }
+
+            SetStatus("status_testing", answered + missed, targets.Count);
+        });
 
         try
         {
+            // The plain await (no ConfigureAwait(false)) puts the continuation back on the UI
+            // thread, which also guarantees the dispatcher has drained every posted report
+            // before the final status is set - Progress posts are queued ahead of this resumption,
+            // so the "done" line can never be overwritten by a late progress line.
             var results = await _tester.MeasureAllAsync(targets.Select(r => r.Server),
-                                                        progress: null);
+                                                        progress: progress);
 
-            var answered = 0;
-            foreach (var result in results)
-            {
-                if (!_rows.TryGetValue(result.Server, out var row)) continue;
-                if (result.Ok) { row.Milliseconds = result.Milliseconds; row.TestFailed = false; row.ErrorKey = null; row.ErrorDetail = null; answered++; }
-                else { row.Milliseconds = null; row.TestFailed = true; row.ErrorKey = result.Error; row.ErrorDetail = result.Detail; }
-            }
-
-            SetStatus("status_test_done", answered, targets.Count - answered);
+            SetStatus("status_test_done", answered, missed);
             RebuildVisibleServers();
         }
         catch (OperationCanceledException)
@@ -639,17 +653,23 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         secondary = (secondary ?? string.Empty).Trim();
 
         if (!System.Net.IPAddress.TryParse(primary, out var p)) return "add_invalid";
-        if (!string.IsNullOrEmpty(secondary) && !System.Net.IPAddress.TryParse(secondary, out var s)) return "add_invalid";
-        if (string.IsNullOrEmpty(secondary)) secondary = string.Empty;
+
+        // Parsed once here rather than twice down the checks: the address object is what the
+        // family comparison needs, and the original string is what the duplicate search and the
+        // saved record need. Both live in this one block.
+        System.Net.IPAddress? secondaryAddress = null;
+        if (!string.IsNullOrEmpty(secondary))
+        {
+            if (!System.Net.IPAddress.TryParse(secondary, out var parsed)) return "add_invalid";
+            secondaryAddress = parsed;
+        }
 
         var expected = family == DnsFamily.IPv4 ? System.Net.Sockets.AddressFamily.InterNetwork
                                                 : System.Net.Sockets.AddressFamily.InterNetworkV6;
         if (p.AddressFamily != expected) return "add_mismatch";
-        if (!string.IsNullOrEmpty(secondary))
-        {
-            if (System.Net.IPAddress.TryParse(secondary, out var s2) && s2.AddressFamily != expected) return "add_mismatch";
-            if (string.Equals(primary, secondary, StringComparison.OrdinalIgnoreCase)) return "add_same";
-        }
+        if (secondaryAddress is not null && secondaryAddress.AddressFamily != expected) return "add_mismatch";
+        if (secondaryAddress is not null &&
+            string.Equals(primary, secondary, StringComparison.OrdinalIgnoreCase)) return "add_same";
 
         if (System.Net.IPAddress.IsLoopback(p)) return "add_loopback";
 
@@ -670,7 +690,10 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         {
             _custom = _custom.Where(c => !c.Equals(server)).ToList();
             ErrorText = ex.Message;
-            return "error_custom_read";
+            // A save failure is a different fact from a read one, and the two keys say so:
+            // pointing the user at their saved list would send them looking for a file that is
+            // not the problem.
+            return "error_custom_save";
         }
 
         SetStatus("status_saved");

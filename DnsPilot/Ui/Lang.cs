@@ -108,7 +108,6 @@ public static class Lang
         ["action_apply"]        = ("Use this server", "استفاده از این سرور"),
         ["action_apply_dhcp"]   = ("Use automatic", "استفاده از خودکار"),
         ["action_test"]         = ("Test speed", "تست سرعت"),
-        ["action_testing"]      = ("Testing…", "در حال تست…"),
         ["action_flush"]        = ("Clear cache", "پاک کردن کش"),
         ["action_restore"]      = ("Restore original", "بازگردانی حالت اصلی"),
         ["action_add"]          = ("Add server", "افزودن سرور"),
@@ -160,19 +159,27 @@ public static class Lang
         ["status_failed"]       = ("Windows refused that change", "ویندوز این تغییر را نپذیرفت"),
         ["status_no_adapter"]   = ("No adapter is selected", "کارت شبکه‌ای انتخاب نشده است"),
         ["status_nothing_selected"] = ("Choose a server first", "ابتدا یک سرور انتخاب کنید"),
-        ["status_testing"]      = ("Measuring {0} servers…", "در حال اندازه‌گیری {0} سرور…"),
+        ["status_testing"]      = ("Measuring {0} of {1} servers…", "در حال اندازه‌گیری {0} از {1} سرور…"),
         ["status_test_done"]    = ("{0} answered, {1} did not", "{0} پاسخ داد، {1} پاسخ نداد"),
         ["status_saved"]        = ("Saved", "ذخیره شد"),
 
         ["language"]            = ("Language", "زبان"),
         ["theme"]               = ("Theme", "پوسته"),
+        // The tray icon opens the window on a single click, which is what the tip must say;
+        // "double-click" described a click pattern the code never had.
         ["tray_show"]           = ("Show window", "نمایش پنجره"),
         ["tray_exit"]           = ("Exit", "خروج"),
-        ["tray_tip"]            = ("DnsPilot, double-click to open", "DnsPilot، برای باز کردن دوبار کلیک کنید"),
+        ["tray_tip"]            = ("DnsPilot, click to open", "DnsPilot، برای باز کردن کلیک کنید"),
 
         ["error_detail"]        = ("Details", "جزئیات"),
         ["error_running"]       = ("DnsPilot could not run its helper", "اجرای ابزار کمکی DnsPilot ممکن نشد"),
         ["error_custom_read"]   = ("Your saved servers had a problem", "در سرورهای ذخیره‌شده شما مشکلی پیش آمد"),
+        // The three reasons behind "error_custom_read", spoken separately so the sentence can
+        // say which file failed, and how much of it was lost. The unreadable case carries the
+        // exception message Windows wrote, which is phrased in the system language.
+        ["custom_skipped"]      = ("{0} of your saved servers were skipped, because their addresses are not valid", "{0} سرور از سرورهای ذخیره‌شدهٔ شما نادیده گرفته شد، چون آدرس‌هایش معتبر نیستند"),
+        ["custom_unreadable"]   = ("the file could not be read ({0})", "فایل خواندنی نبود ({0})"),
+        ["error_custom_save"]   = ("Your server could not be saved", "سرور شما ذخیره نشد"),
         ["error_preset_read"]   = ("The built-in server list could not be loaded", "فهرست سرورهای داخلی بارگذاری نشد"),
         ["error_adapter_gone"]  = ("That adapter is no longer available", "آن کارت دیگر در دسترس نیست"),
         ["error_ipv6_unsupported"] = ("Windows has no IPv6 configuration for that adapter", "ویندوز پیکربندی IPv6 برای آن کارت ندارد"),

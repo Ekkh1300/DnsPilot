@@ -29,6 +29,10 @@ prerequisite. Uninstalling returns **every** adapter's DNS to automatic (DHCP) r
 leaving the machine on a resolver chosen inside an app that has just been removed, and it
 reports which of those two outcomes actually happened.
 
+Switches it accepts: `/LANG=fa` or `/LANG=en` forces the setup UI's language (otherwise it
+follows Windows), `/DIR=<path>` picks the destination, and `/SILENT` installs without showing
+the window. `/UNINSTALL` is the entry registered in Programs and Features.
+
 ## What it does
 
 - **Apply a resolver** to a chosen adapter, or return to automatic.
@@ -112,9 +116,11 @@ runs from any working directory, and it does exactly three things:
 2. **Compress.** `Compress-Archive` of that folder into `DnsPilot\dist\payload.zip` (67 MB).
 3. **Compile.** `Setup.cs` through
    `C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe` — the C# compiler that ships inside
-   Windows — with `/resource:payload.zip,dnspilot.payload.zip`, which turns the payload into a
-   manifest resource of the installer itself. That single flag is the whole reason there is no
-   Inno Setup or WiX step.
+   Windows — with `/resource:payload.zip,dnspilot.payload.zip` (the payload becomes a manifest
+   resource of the installer itself — that single flag is why there is no Inno Setup or WiX
+   step), `/codepage:65001` (the source is UTF-8 with no BOM; without the flag a C# 5 csc reads
+   it as ANSI and every Persian string compiles into mojibake) and `/win32icon` (the generated
+   app icon, so `DnsPilot-Setup.exe` shows the same face in Explorer and in its own title bar).
 
 Step 1 needs the .NET 8 SDK and step 3 needs the .NET Framework 4 compiler; both are already on
 Windows 10 or later, so nothing extra has to be installed to build the installer. The script
@@ -183,9 +189,9 @@ from inside the assembly rather than through a file path.
 
 ## Tests
 
-70 tests, covering the DNS wire format, the preset store, and the view model — including the
-failure-reason plumbing and the regression that stopped the **Use** button from enabling after
-a test completed.
+73 tests, covering the DNS wire format, the latency loop (measured against a resolver the test
+itself runs on `127.0.0.1`), the preset store, and the view model — including the failure-reason
+plumbing and the regression that stopped the **Use** button from enabling after a test completed.
 
 ```powershell
 dotnet test DnsPilot.Tests\DnsPilot.Tests.csproj

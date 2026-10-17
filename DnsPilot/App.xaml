@@ -250,6 +250,12 @@
             <Style x:Key="Row" TargetType="ListBoxItem">
                 <Setter Property="SnapsToDevicePixels" Value="True" />
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <!-- The row's text may not stay the default: the implicit Control style stamps
+                     SystemColors.ControlText (black) onto the ListBox itself, and with nothing
+                     here to override it the server names rendered as black-on-dark - invisible
+                     in the dark theme, while every vetted neighbour (addresses, latency, chips)
+                     carried an explicit brush and survived. Ink inherits into the whole row. -->
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Ink}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
@@ -302,6 +308,87 @@
                                     <Setter Property="Opacity" Value="0.3" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Tray menu. The menu lives outside the window's visual tree (it is opened by
+                 hand from the notification icon), so its default rendering is the WPF system
+                 theme: white panels and system highlight colours, which in the dark theme is a
+                 white rectangle next to a blue-black window, and in Persian a left-aligned strip.
+                 These styles are assigned explicitly to the menu and its items in MainWindow -
+                 explicitly, because Application-level implicit styles are not guaranteed to reach
+                 a ContextMenu that has no logical parent - and the brushes stay DynamicResource,
+                 so a theme switch restyles the open menu exactly like the window. -->
+            <Style x:Key="Menu.Tray" TargetType="ContextMenu">
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Ink}" />
+                <Setter Property="Padding" Value="5" />
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ContextMenu">
+                            <Border Background="{DynamicResource Brush.Surface}"
+                                    BorderBrush="{DynamicResource Brush.Line.Strong}"
+                                    BorderThickness="1"
+                                    CornerRadius="9"
+                                    Padding="{TemplateBinding Padding}">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="14" ShadowDepth="2" Opacity="0.28" />
+                                </Border.Effect>
+                                <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="Menu.TrayItem" TargetType="MenuItem">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Ink}" />
+                <Setter Property="FontSize" Value="12.5" />
+                <Setter Property="Padding" Value="10,7" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="MenuItem">
+                            <Border x:Name="Bd"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="6"
+                                    Padding="{TemplateBinding Padding}">
+                                <!-- ContentSource="Header" is not optional: a bare ContentPresenter
+                                     binds to Content, which a MenuItem does not carry - it is a
+                                     HeaderedItemsControl, and without the source named the row
+                                     renders as an empty strip of the right height. -->
+                                <ContentPresenter ContentSource="Header" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsHighlighted" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Brush.Hover}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.45" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="Menu.TraySep" TargetType="Separator">
+                <Setter Property="Background" Value="{DynamicResource Brush.Line}" />
+                <Setter Property="Margin" Value="7,4" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Separator">
+                            <Border Background="{TemplateBinding Background}" Height="1"
+                                    Margin="{TemplateBinding Margin}"
+                                    SnapsToDevicePixels="True" />
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>

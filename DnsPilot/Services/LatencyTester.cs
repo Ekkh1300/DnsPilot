@@ -35,8 +35,9 @@ public sealed record LatencyResult(DnsServer Server, int? Milliseconds, string? 
 /// Second, the minimum of several attempts is used rather than an average. The first packet to
 /// a resolver pays for an ARP or neighbour lookup and any queue on the path; averaging keeps that
 /// cost in the result, and the figure that is useful for choosing a server is how fast it is
-/// when nothing is in the way. Two attempts is enough to leave the first one behind without
-/// making the whole list slow to test.
+/// when nothing is in the way. Every attempt therefore always runs: a minimum over samples
+/// that stop at the first answer would be one sample - exactly the cost the minimum exists to
+/// remove. Three small queries per server still leaves a full list testing in seconds.
 ///
 /// Nothing here changes the machine. It only asks a question and waits for the answer, so it is
 /// safe to run while another test is in progress.
@@ -74,11 +75,12 @@ public sealed class LatencyTester
     /// How many times to ask before giving up on a server.
     /// </summary>
     /// <remarks>
-    /// Three rather than two, with the minimum taken. The first packet to a resolver pays for a
+    /// Three, and the minimum of all three is taken. The first packet to a resolver pays for a
     /// neighbour lookup, and the second can still land behind a retransmission, so a single
-    /// sample is often an outlier. Three is enough for the minimum to reflect the server rather
-    /// than the path's mood, without turning a full sweep of the list into a wait - a server that
-    /// answers stops asking immediately, so this only costs anything on servers that are dead.
+    /// sample is often an outlier; three is enough for the minimum to reflect the server rather
+    /// than the path's mood. All three fire even for a server that answered first, because a
+    /// minimum over samples that stop at the first answer would be one sample - the earlier
+    /// remark says the same thing at the type level.
     /// </remarks>
     public int Attempts { get; init; } = 3;
 
@@ -117,9 +119,10 @@ public sealed class LatencyTester
 
             if (ms is not null)
             {
+                // Lower than anything so far. No early break: the first successful packet paid
+                // for the neighbour lookup, and stopping there would put that one-time cost in
+                // the very number this loop exists to remove.
                 best = Math.Min(best, ms.Value);
-                // One good measurement is the whole answer; further attempts cannot improve it.
-                break;
             }
 
             if (error is not null)
@@ -195,7 +198,7 @@ public sealed class LatencyTester
     /// Measures every server concurrently, up to a bounded number in flight at once.
     /// </summary>
     /// <remarks>
-    /// Bounded rather than one-at-a-time because a full list is seventy-one servers and a slow
+    /// Bounded rather than one-at-a-time because a full list is sixty-three servers and a slow
     /// link would otherwise make the sweep take minutes, but the bound is deliberately low at
     /// six.
     ///

@@ -52,10 +52,20 @@ Write-Output '[3/3] compile setup'
 Remove-Item $out -Force -ErrorAction SilentlyContinue
 $manifest = Join-Path $root 'installer\setup.manifest'
 $setupCs  = Join-Path $root 'installer\Setup.cs'
+$icon     = Join-Path $root 'Assets\dns-pilot.ico'
 $refs = @(
     '/nologo', '/target:winexe', '/platform:anycpu', '/optimize+', '/debug-',
     "/out:$out",
     "/win32manifest:$manifest",
+    # Setup.cs is UTF-8 without a BOM, like every other source in this repo, and the in-box C# 5
+    # csc reads BOM-less sources as the ANSI code page: every Persian string in the installer
+    # compiled into mojibake and rendered as noise on the Persian setup screen. Two dashes of
+    # encoding hygiene - this flag, and the code review that caught it late - are the difference.
+    '/codepage:65001',
+    # The app icon, so DnsPilot-Setup.exe in Explorer and the setup window's title bar show
+    # the same face the installed app does; Setup.cs also pulls the 32px frame back out of
+    # the exe for its header badge.
+    "/win32icon:$icon",
     "/resource:$zip,dnspilot.payload.zip",
     '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll',
     '/r:System.IO.Compression.dll', '/r:System.IO.Compression.FileSystem.dll',

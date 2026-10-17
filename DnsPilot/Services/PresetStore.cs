@@ -77,7 +77,15 @@ public sealed class PresetStore
     /// neither is a file that fails to parse: the app still has to open with the built-in list
     /// in place, so a corrupt custom file is reported by the caller rather than thrown here.
     /// </summary>
-    public (IReadOnlyList<DnsServer> Servers, string? Problem) TryLoadCustom()
+    /// <remarks>
+    /// The problem comes back as a <see cref="CustomProblem"/> - a Lang key and its arguments,
+    /// not English words - because Services never knows which language the window is running in.
+    /// Formatting happens at the UI edge, where the language is current; this is the same rule
+    /// <c>LatencyResult</c> already follows for its error keys. The one argument that cannot be
+    /// localised is the exception's own message: Windows phrases it in the system language, and
+    /// repeating it verbatim is the honest way to carry the OS's reason through.
+    /// </remarks>
+    public (IReadOnlyList<DnsServer> Servers, CustomProblem? Problem) TryLoadCustom()
     {
         if (!File.Exists(CustomPath)) return ([], null);
 
@@ -109,18 +117,18 @@ public sealed class PresetStore
             }
 
             var problem = skipped > 0
-                ? $"{skipped} of your saved servers are not valid addresses and were skipped"
+                ? new CustomProblem("custom_skipped", [skipped])
                 : null;
 
             return (usable, problem);
         }
         catch (JsonException ex)
         {
-            return ([], $"your saved servers could not be read ({ex.Message})");
+            return ([], new CustomProblem("custom_unreadable", [ex.Message]));
         }
         catch (IOException ex)
         {
-            return ([], $"your saved servers could not be read ({ex.Message})");
+            return ([], new CustomProblem("custom_unreadable", [ex.Message]));
         }
     }
 
@@ -183,6 +191,10 @@ public sealed class PresetStore
     }
 }
 
+/// <summary>Why a saved custom list could not be used in full, as a Lang key and its arguments.
+/// Services never formats them; the UI edge does, where the current language is known.</summary>
+public sealed record CustomProblem(string Key, object[] Args);
+
 // --- serialisation shapes. These deliberately do not reuse DnsServer: the file format is a
 // persistence contract and letting a domain record double as one makes a rename in the model a
 // silent break in every saved file. ---
@@ -216,7 +228,7 @@ internal sealed class DnsServerFile
     /// not declare its own.
     /// </summary>
     /// <remarks>
-    /// The built-in file states the family once per group rather than on all seventy-one
+    /// The built-in file states the family once per group rather than on all sixty-three
     /// entries, so a loader that defaulted each entry to IPv4 would take one look at every IPv6
     /// address, decide it did not match its family, and drop it - leaving the window with three
     /// groups instead of six and no IPv6 resolver available at all.

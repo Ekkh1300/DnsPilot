@@ -9,6 +9,7 @@
 //   /SILENT          install with defaults, no UI (exit code 0 = success)
 //   /DIR=<path>      install destination (with /SILENT)
 //   /UNINSTALL       remove the installation registered in the registry
+//   /LANG=fa|en      force the setup UI's language instead of following Windows'
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,7 +27,7 @@ namespace DnsPilotInstaller
     internal static class Program
     {
         public const string AppName = "DnsPilot";
-        public const string Version = "1.2.2";
+        public const string Version = "1.0.0";
         public const string Publisher = "esi";
         public const string PayloadResource = "dnspilot.payload.zip";
 
@@ -36,6 +37,7 @@ namespace DnsPilotInstaller
             bool uninstall = false;
             bool silent = false;
             string dir = null;
+            string lang = null;
 
             for (int i = 0; i < args.Length; i++)
             {
@@ -44,9 +46,10 @@ namespace DnsPilotInstaller
                 else if (string.Equals(a, "/SILENT", StringComparison.OrdinalIgnoreCase)) silent = true;
                 else if (a.StartsWith("/DIR=", StringComparison.OrdinalIgnoreCase)) dir = a.Substring(5).Trim('"');
                 else if (string.Equals(a, "/DIR", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length) dir = args[++i].Trim('"');
+                else if (a.StartsWith("/LANG=", StringComparison.OrdinalIgnoreCase)) lang = a.Substring(6);
             }
 
-            L.Init();
+            L.Init(lang);
 
             if (uninstall)
             {
@@ -80,7 +83,10 @@ namespace DnsPilotInstaller
         static L()
         {
             Add("title", "نصب DnsPilot", "DnsPilot Setup");
-            Add("sub", "مدیریت و پایش شبکه", "Network monitoring and control");
+            // What the app does, in one line - the setup window is where a new user reads the
+            // product's self-description, so it says "switch DNS" and nothing else. The old
+            // wording ("network monitoring and control") belonged to a different product.
+            Add("sub", "تعویض سریع سرور DNS ویندوز", "Switch your Windows DNS quickly");
             Add("creator", "سازنده", "Creator");
             Add("dest", "پوشهٔ نصب", "Install folder");
             Add("browse", "انتخاب…", "Browse…");
@@ -96,7 +102,7 @@ namespace DnsPilotInstaller
             Add("launch", "اجرای DnsPilot", "Launch DnsPilot");
             Add("close_app", "DnsPilot در حال اجراست و بسته می‌شود. ادامه می‌دهید؟",
                 "DnsPilot is running and will be closed. Continue?");
-            Add("app_desc", "مدیریت و پایش شبکه", "Network monitor and tools");
+            Add("app_desc", "تعویض سرور DNS ویندوز", "Switch your Windows DNS quickly");
             Add("uninstall_done", "DnsPilot از سیستم حذف شد.", "DnsPilot has been removed from this computer.");
             // Stated separately because it is a separate, verifiable action, not part of the
             // summary. Leaving the machine on a resolver chosen inside an app that has just been
@@ -107,17 +113,22 @@ namespace DnsPilotInstaller
                 "DNS could not be returned to automatic; check it before going online.");
             Add("error", "خطا در نصب", "Setup error");
             Add("bad_dir", "محل نصب انتخاب نشده است.", "Please choose an install folder.");
-            Add("admin_hint", "برای نصب در پوشهٔ سیستمی به دسترسی ادمین نیاز است.",
-                "Installing to a system folder requires administrator rights.");
         }
 
         private static void Add(string key, string fa, string en) { T[key] = new string[] { fa, en }; }
 
-        /// <summary>Selects the label language from the Windows UI culture.</summary>
-        public static void Init()
+        /// <summary>
+        /// Selects the label language from the Windows UI culture, or from /LANG=fa|en when the
+        /// argument was given - an explicit switch beats the machine's preference, and it also
+        /// gives the screenshot tools a way to capture both languages without touching the
+        /// system's own language settings.
+        /// </summary>
+        public static void Init(string forced)
         {
             G("title");   // forces the static table to load
-            IsFa = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "fa";
+            string want = (forced ?? string.Empty).Trim().ToLowerInvariant();
+            if (want.Length == 0) want = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+            IsFa = want == "fa" || want == "fa-ir";
         }
 
         public static string G(string key)
@@ -169,8 +180,27 @@ namespace DnsPilotInstaller
         private class Manifest
         {
             public readonly List<string> Lines = new List<string>();
-            public void AddFile(string relative) { Lines.Add("file:" + relative); }
-            public void AddLink(string full) { Lines.Add("shortcut:" + full); }
+            public void AddFile(string relative) { if (!Lines.Contains("file:" + relative)) Lines.Add("file:" + relative); }
+            public void AddLink(string full) { if (!Lines.Contains("shortcut:" + full)) Lines.Add("shortcut:" + full); }
+
+            /// <summary>
+            /// Keeps what a previous install recorded. An upgrade overwrites this manifest, and
+            /// a file the old payload had that the new one no longer carries would otherwise
+            /// drop out of the list and never be uninstalled - so old entries merge in first,
+            /// and deduplication keeps a re-listed file single.
+            /// </summary>
+            public void Merge(string dir)
+            {
+                string path = Path.Combine(dir, "uninstall.dat");
+                if (!File.Exists(path)) return;
+                foreach (string line in System.IO.File.ReadAllLines(path))
+                {
+                    string t = line.Trim();
+                    if (t.StartsWith("file:") || t.StartsWith("shortcut:"))
+                        if (!Lines.Contains(t)) Lines.Add(t);
+                }
+            }
+
             public void Save(string dir) { System.IO.File.WriteAllText(Path.Combine(dir, "uninstall.dat"), string.Join(Environment.NewLine, Lines.ToArray())); }
         }
 
@@ -185,10 +215,29 @@ namespace DnsPilotInstaller
                 Directory.CreateDirectory(dest);
 
                 Manifest manifest = new Manifest();
+                manifest.Merge(dest);
+
                 ExtractPayload(dest, ui, manifest);
 
                 string exe = Path.Combine(dest, Program.AppName + ".exe");
                 if (!File.Exists(exe)) throw new FileNotFoundException("payload did not contain " + Program.AppName + ".exe");
+
+                // Saved the moment the payload is on disk. A failure in anything after this
+                // point - a COM shortcut API, the registry - must still leave a manifest that
+                // describes the files that DID land, otherwise the machine ends up with an app
+                // installed and no record to remove it by.
+                manifest.Save(dest);
+
+                // The uninstall registered in Programs and Features has to live inside the
+                // installation itself: pointing it at the original setup.exe means an entry
+                // that breaks the moment the user tidies their Downloads folder. The copy is
+                // part of what gets uninstalled, so it goes into the manifest too.
+                string uninstaller = CopySelf(dest);
+                if (uninstaller != null)
+                {
+                    manifest.AddFile(uninstaller);
+                    manifest.Save(dest);
+                }
 
                 // Shortcuts for every user (the installer is elevated).
                 string commonDesktop = Path.Combine(
@@ -202,15 +251,16 @@ namespace DnsPilotInstaller
                 {
                     Shortcut.Create(commonDesktop, exe, L.G("app_desc"));
                     manifest.AddLink(commonDesktop);
+                    manifest.Save(dest);
                 }
                 if (menu)
                 {
                     Shortcut.Create(menuLink, exe, L.G("app_desc"));
                     manifest.AddLink(menuLink);
+                    manifest.Save(dest);
                 }
 
-                manifest.Save(dest);
-                RegisterUninstall(dest, exe);
+                RegisterUninstall(dest, exe, uninstaller);
                 return 0;
             }
             catch (Exception ex)
@@ -219,6 +269,26 @@ namespace DnsPilotInstaller
                 else Console.Error.WriteLine(ex.ToString());
                 return 1;
             }
+        }
+
+        /// <summary>
+        /// Copies this setup program itself into the install folder as the uninstaller. Returns
+        /// the copy, or null when it could not be made - uninstall registration then falls back
+        /// to the original exe, which is the old behaviour rather than a failure.
+        /// </summary>
+        private static string CopySelf(string dest)
+        {
+            try
+            {
+                string source = Assembly.GetExecutingAssembly().Location;
+                if (string.IsNullOrEmpty(source)) return null;
+                string target = Path.Combine(dest, "Uninstall.exe");
+                if (string.Equals(source, target, StringComparison.OrdinalIgnoreCase))
+                    return target;   // already running from the copy itself: re-running the installer
+                File.Copy(source, target, true);
+                return target;
+            }
+            catch { return null; }
         }
 
         /// <summary>
@@ -250,6 +320,14 @@ namespace DnsPilotInstaller
             {
                 if (nic.NetworkInterfaceType == NetworkInterfaceType.Loopback) continue;
                 if (string.IsNullOrEmpty(nic.Name)) continue;
+
+                // A quote in an adapter name is legal, but this argument string is built by
+                // hand here (the app's own code path uses ProcessStartInfo.ArgumentList; a
+                // program compiled by the in-box C# 5 compiler cannot). A quoted name
+                // would close the quoting early and hand netsh a fragment instead of a name,
+                // so such an adapter is skipped rather than mangled - netsh could not address
+                // it through this spelling either way.
+                if (nic.Name.IndexOf('"') >= 0) continue;
 
                 // The name is quoted because adapter names routinely contain spaces, and netsh
                 // wants the display name here rather than the interface GUID.
@@ -300,11 +378,18 @@ namespace DnsPilotInstaller
             }
             foreach (Process p in procs)
             {
-                try { p.Kill(); }
+                try
+                {
+                    p.Kill();
+                    // Waiting rather than sleeping: the process tells us when it has gone,
+                    // which on a busy machine takes longer than 800 ms and on a quick one
+                    // spends nothing. Three seconds is the ceiling; a killed but wedged
+                    // process still gets overwritten by the payload extraction below.
+                    p.WaitForExit(3000);
+                }
                 catch { /* already exiting */ }
                 finally { p.Dispose(); }
             }
-            Thread.Sleep(800);
             return true;
         }
 
@@ -329,6 +414,17 @@ namespace DnsPilotInstaller
                     ZipArchiveEntry e = files[i];
                     string relative = e.FullName.Replace('/', Path.DirectorySeparatorChar);
                     string target = Path.Combine(dest, relative);
+
+                    // The zip is written by this repo's own build script, but a step that
+                    // writes files is still one step away from being the step that trusts
+                    // them: an entry spelled "..\.." would escape the install folder, and a
+                    // poisoned payload would then place files wherever it liked. Resolving the
+                    // final path and requiring it to stay inside dest costs one comparison.
+                    if (!Path.GetFullPath(target).StartsWith(
+                            Path.GetFullPath(dest) + Path.DirectorySeparatorChar,
+                            StringComparison.OrdinalIgnoreCase))
+                        throw new IOException("payload entry would escape the install folder: " + relative);
+
                     string parent = Path.GetDirectoryName(target);
                     if (!string.IsNullOrEmpty(parent)) Directory.CreateDirectory(parent);
 
@@ -341,7 +437,7 @@ namespace DnsPilotInstaller
             }
         }
 
-        private static void RegisterUninstall(string dest, string exe)
+        private static void RegisterUninstall(string dest, string exe, string uninstaller)
         {
             try
             {
@@ -356,7 +452,7 @@ namespace DnsPilotInstaller
                         sub.SetValue("Publisher", Program.Publisher);
                         sub.SetValue("InstallLocation", dest);
                         sub.SetValue("DisplayIcon", exe);
-                        sub.SetValue("UninstallString", "\"" + Assembly.GetExecutingAssembly().Location + "\" /UNINSTALL");
+                        sub.SetValue("UninstallString", "\"" + (uninstaller ?? Assembly.GetExecutingAssembly().Location) + "\" /UNINSTALL");
                         sub.SetValue("NoModify", 1, Microsoft.Win32.RegistryValueKind.DWord);
                         sub.SetValue("NoRepair", 1, Microsoft.Win32.RegistryValueKind.DWord);
                         try
@@ -391,12 +487,18 @@ namespace DnsPilotInstaller
                 Process[] procs = Process.GetProcessesByName(Program.AppName);
                 foreach (Process p in procs)
                 {
-                    try { p.Kill(); } catch { }
+                    try { p.Kill(); p.WaitForExit(3000); } catch { }
                     finally { p.Dispose(); }
                 }
-                if (procs.Length > 0) Thread.Sleep(800);
 
                 bool dnsRestored = RemoveShortcutsAndFiles(dest);
+
+                // The copy of this program inside the installation is also part of what gets
+                // removed, and it cannot delete itself while it is running - File.Delete on a
+                // running exe is refused by Windows. A separate cmd, told to wait and then
+                // delete, exits the list: the uninstaller can return, and the file is gone a
+                // moment later. The window-less cmd outlives this process by design.
+                ScheduleSelfDelete(dest);
 
                 // Registry entry (ours only).
                 try
@@ -423,6 +525,36 @@ namespace DnsPilotInstaller
             {
                 if (!silent) MessageBox.Show(ex.Message, L.G("error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return 1;
+            }
+        }
+
+        /// <summary>
+        /// Deletes the installed copy of this program after the uninstall process has exited,
+        /// when this process is that copy. Anything else (install run from Downloads, say)
+        /// schedules nothing - the uninstall evidence in that folder is not ours to clean.
+        /// </summary>
+        private static void ScheduleSelfDelete(string dest)
+        {
+            try
+            {
+                string self = Assembly.GetExecutingAssembly().Location;
+                if (string.IsNullOrEmpty(self)) return;
+                if (!self.StartsWith(Path.GetFullPath(dest) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) return;
+
+                // The classic ping delay: two seconds of waiting that outlives this process,
+                // after which the file is deletable. CreateNoWindow keeps the cmd invisible.
+                var psi = new ProcessStartInfo
+                {
+                    FileName = Environment.GetEnvironmentVariable("ComSpec") ?? "cmd.exe",
+                    Arguments = "/c ping -n 3 127.0.0.1 > nul & del /f \"" + self + "\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+                Process.Start(psi);
+            }
+            catch
+            {
+                // A copy left behind is a nuisance, not a failure; the uninstall itself is done.
             }
         }
 
@@ -559,7 +691,24 @@ namespace DnsPilotInstaller
             StartPosition = FormStartPosition.CenterScreen;
             Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             BackColor = Color.White;
-            if (L.IsFa) RightToLeft = RightToLeft.Yes;
+            if (L.IsFa)
+            {
+                RightToLeft = RightToLeft.Yes;
+                // RightToLeftLayout is deliberately NOT used: the Win32 LAYOUT_RTL style it sets
+                // mirrors the whole drawing surface, and on Windows 11 that style turns every
+                // label's glyphs into their own mirror image - "نصب" rendered as "بصن" - rather
+                // than a proper RTL line. RightToLeft maps reading order, check-box position and
+                // text alignment; the geometry itself is mirrored by hand further down, where
+                // every location is known and nothing is left to a window style.
+            }
+
+            try
+            {
+                // The setup exe carries the app's own icon (build.ps1 passes /win32icon), so
+                // title bar, taskbar and Programs-and-Features all show the same face.
+                Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+            }
+            catch { /* icon is decoration; a failure keeps the default */ }
 
             // Accent header
             var header = new Panel();
@@ -568,15 +717,40 @@ namespace DnsPilotInstaller
             header.BackColor = Color.FromArgb(24, 28, 40);
             Controls.Add(header);
 
-            var glyph = new Label();
-            glyph.Text = "N";
-            glyph.Font = new Font("Segoe UI Semibold", 22F, FontStyle.Bold);
-            glyph.ForeColor = Color.White;
-            glyph.BackColor = Color.FromArgb(56, 189, 248);
-            glyph.TextAlign = ContentAlignment.MiddleCenter;
-            glyph.Size = new Size(46, 46);
-            glyph.Location = new Point(24, 20);
-            header.Controls.Add(glyph);
+            // The app's icon at header size, extracted from the running exe. If that ever
+            // fails, the fallback is a plain letter badge in the brand colour - the point of
+            // the badge is to identify the product, not to depend on a resource.
+            Control badge = null;
+            try
+            {
+                using (Icon appIcon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location))
+                {
+                    if (appIcon != null)
+                    {
+                        var pic = new PictureBox();
+                        pic.Image = appIcon.ToBitmap();
+                        pic.Size = new Size(46, 46);
+                        pic.SizeMode = PictureBoxSizeMode.Zoom;
+                        pic.Location = new Point(24, 20);
+                        pic.BackColor = header.BackColor;
+                        badge = pic;
+                    }
+                }
+            }
+            catch { }
+            if (badge == null)
+            {
+                var glyph = new Label();
+                glyph.Text = "D";
+                glyph.Font = new Font("Segoe UI Semibold", 22F, FontStyle.Bold);
+                glyph.ForeColor = Color.White;
+                glyph.BackColor = Color.FromArgb(79, 91, 213);   // DnsPilot brand indigo
+                glyph.TextAlign = ContentAlignment.MiddleCenter;
+                glyph.Size = new Size(46, 46);
+                glyph.Location = new Point(24, 20);
+                badge = glyph;
+            }
+            header.Controls.Add(badge);
 
             var title = new Label();
             title.Text = L.G("title");
@@ -597,7 +771,7 @@ namespace DnsPilotInstaller
 
             var creator = new Label();
             creator.Text = L.G("creator") + ":  esi";
-            creator.ForeColor = Color.FromArgb(56, 189, 248);
+            creator.ForeColor = Color.FromArgb(124, 141, 245);   // the brand's light indigo
             creator.BackColor = Color.Transparent;
             creator.AutoSize = true;
             creator.Location = new Point(88, 71);
@@ -684,16 +858,32 @@ namespace DnsPilotInstaller
             _primary.Text = L.G("install");
             _primary.Size = new Size(92, 30);
             _primary.Location = new Point(258, 290);
-            _primary.BackColor = Color.FromArgb(56, 189, 248);
+            _primary.Click += delegate { OnPrimary(); };
+            _primary.BackColor = Color.FromArgb(79, 91, 213);    // DnsPilot brand indigo
             _primary.ForeColor = Color.White;
             _primary.FlatStyle = FlatStyle.Flat;
             _primary.FlatAppearance.BorderSize = 0;
             _primary.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            _primary.Click += delegate { OnPrimary(); };
             Controls.Add(_primary);
 
             AcceptButton = _primary;
             CancelButton = _cancel;
+
+            if (L.IsFa)
+            {
+                // The hand-mirror promised above. Runs once, after every control has been added
+                // and auto-sized: AutoSize labels and check boxes have a final Width by now, so
+                // flipping x around the right edge reproduces exactly the geometry the English
+                // form has, seen from the other side. Fixed-size boxes give the same numbers;
+                // nothing depends on a window style or a paint path here.
+                int w = ClientSize.Width;   // 474 - both the header panel (Dock=Top) and this
+                foreach (Control c in new Control[] { badge, title, sub, creator })
+                    c.Location = new Point(header.Width - c.Location.X - c.Width, c.Location.Y);
+                foreach (Control c in new Control[]
+                         { destLabel, _dest, browse, _desktop, _menu,
+                           _task, _bar, _hint, _launch, _cancel, _primary })
+                    c.Location = new Point(w - c.Location.X - c.Width, c.Location.Y);
+            }
         }
 
         private void OnPrimary()
@@ -746,41 +936,29 @@ namespace DnsPilotInstaller
 
         private void Finish(int rc)
         {
-            if (rc != 3)
+            // Every outcome re-enables the form first; rc decides what the task line says next.
+            _dest.Enabled = true;
+            _desktop.Enabled = true;
+            _menu.Enabled = true;
+            _cancel.Enabled = true;
+            _primary.Enabled = true;
+            _bar.Visible = false;
+
+            // 3 = the user declined to close the running app; nothing failed, so the form goes
+            // back to its ready state without an error message.
+            if (rc == 3) { _task.Text = L.G("ready"); return; }
+
+            if (rc != 0)
             {
-                // 3 = the user declined to close the running app; nothing failed, so the
-                // form simply goes back to its ready state without an error message.
-                if (rc != 0)
-                {
-                    _dest.Enabled = true;
-                    _desktop.Enabled = true;
-                    _menu.Enabled = true;
-                    _cancel.Enabled = true;
-                    _primary.Enabled = true;
-                    _bar.Visible = false;
-                    _task.Text = L.G("error");
-                    return;
-                }
-            }
-            else
-            {
-                _dest.Enabled = true;
-                _desktop.Enabled = true;
-                _menu.Enabled = true;
-                _cancel.Enabled = true;
-                _primary.Enabled = true;
-                _bar.Visible = false;
-                _task.Text = L.G("ready");
+                _task.Text = L.G("error");
                 return;
             }
 
             _installed = true;
-            _bar.Visible = false;
             _task.Text = L.G("done");
             _hint.Text = "";
             _launch.Visible = true;
             _primary.Text = L.G("finish");
-            _primary.Enabled = true;
             _cancel.Enabled = false;
         }
 
